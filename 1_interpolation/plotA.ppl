@@ -3,6 +3,6 @@ set output 'plotA.pdf'
 set xlabel 'x'
 set ylabel 'y'
 set key top left
-plot 'A.dat' index 0 title 'Source', \
+plot 'A.dat' index 0 title 'Data', \
 'A.dat' index 1 w l lt 1 title 'lspline', \
 'A.dat' index 2 w l lt 2 title 'qspline'
