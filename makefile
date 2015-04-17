@@ -5,6 +5,7 @@ push:
 
 backup:
 	tar -cvzf numeric.tar.gz *
+	tree
 	echo 'Backup of Numerical Methods' > message
 	echo 'Contents:' >> message
 	tree >> message
