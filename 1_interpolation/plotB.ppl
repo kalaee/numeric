@@ -1,0 +1,10 @@
+set terminal pdf
+set output 'plotB.pdf'
+set xlabel 'x'
+set ylabel 'y'
+set key top left
+plot 'B.dat' index 0 title 'Data', \
+'B.dat' index 1 w l lt 1 title 'qspline', \
+'B.dat' index 2 w l lt 2 title 'Derivative', \
+'B.dat' index 3 w l lt 3 title 'Integral'
+
