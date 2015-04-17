@@ -1,15 +1,10 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
+#include <assert.h>
 
-typedef struct
-{
-	int n;
-	double *x, *y, *b, *c;
-} qspline;
-qspline* qspline_alloc(int n, double x[], double y[]);
-double qspline_eval(qspline * s, double z);
-void qspline_free(qspline * s);
-double lspline(int n, double x[], double y[], double z);
+#include "lspline.h"
+#include "qspline.h"
 
 int main(void)
 {

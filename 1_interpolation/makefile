@@ -6,12 +6,7 @@ A: A.dat plotA.ppl
 A.dat: splineA
 	./splineA
 
-splineA: splineA.c lspline.o qspline_eval.o qspline_alloc.o qspline_free.o
-
-lspline.o: lspline.c
-qspline_eval.o: qspline_eval.c
-qspline_alloc.o: qspline_alloc.c
-qspline_free.o: qspline_free.c
+splineA: splineA.c qspline.h lspline.h
 
 clean:
-	rm -f *.dat splineA *.o
+	rm -f *.dat splineA *.o *.pdf

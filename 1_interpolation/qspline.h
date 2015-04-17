@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 #include <assert.h>
 
 typedef struct
@@ -7,6 +8,8 @@ typedef struct
 	int n;
 	double *x, *y, *b, *c;
 } qspline;
+
+// construct the quadratic spline
 qspline* qspline_alloc(int n, double x[], double y[])
 {
 	assert(n>1);
@@ -56,3 +59,34 @@ qspline* qspline_alloc(int n, double x[], double y[])
 
 	return s;
 }
+
+// evaluates the quadratic spline
+double qspline_eval(qspline * s, double z)
+{
+	assert(s->x[0] <= z && z <= s->x[s->n-1]);
+	
+	// binary search for the correct coordinate
+	int i = 0, j = s->n, k;
+	while(j-i > 1)
+	{
+		k = (i+j)/2;
+		if (z > s->x[k])
+
+			i = k;
+		else
+			j = k;
+	}
+
+	return s->y[i] + s->b[i]*(z - s->x[i]) + s->c[i]*pow(z - s->x[i],2);
+}
+
+// frees the memory
+void qspline_free(qspline * s)
+{
+	free(s->x);
+	free(s->y);
+	free(s->b);
+	free(s->c);
+	free(s);
+}
+
