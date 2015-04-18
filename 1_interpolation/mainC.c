@@ -7,9 +7,9 @@ int main(void)
 {
 	// generating source data
 	int length = 10, i;
-	double x[10], y[10];
+	double x[length], y[length];
 	FILE * f = fopen("C.dat","w");
-	for(i=0; i<10; i++)
+	for(i=0; i<length; i++)
 	{
 		x[i] = i+0.5 * sin(i);
 		y[i] = i + cos(i*i);
@@ -17,9 +17,9 @@ int main(void)
 	}
 
 	// finding the interpolation, derivative and integral
-	int steps = 500;
+	int steps = 1000;
 	double dz = (x[length-1]-x[0])/steps, z;
-	cspline * s = cspline_alloc(length, x, y, 0, 0, 0, 0);
+	cspline * s = cspline_alloc(length, x, y);
 	fprintf(f,"\n\n");
 	for(i=0; i<steps; i++)
 	{
