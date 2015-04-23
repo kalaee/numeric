@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+
 #include "cspline.h"
 
 int main(void)
@@ -16,10 +17,11 @@ int main(void)
 		fprintf(f,"%g\t%g\n",x[i],y[i]);
 	}
 
-	// finding the interpolation, derivative and integral
 	int steps = 1000;
 	double dz = (x[length-1]-x[0])/steps, z;
-	cspline * s = cspline_alloc(length, x, y);
+	
+	// finding creating the cspline with second derivatives 3 and -2 at the end points respectively
+	cspline * s = cspline_alloc(length, x, y,3,-2);
 	fprintf(f,"\n\n");
 	for(i=0; i<steps; i++)
 	{
