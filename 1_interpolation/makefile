@@ -1,4 +1,7 @@
-CFLAGS = -Wall -lm -std=gnu99 -g
+CC = gcc
+CFLAGS = -Wall -lm -std=gnu99
+CFLAGS += `gsl-config --cflags`
+LDLIBS += `gsl-config --libs`
 
 # All
 all: A B C
