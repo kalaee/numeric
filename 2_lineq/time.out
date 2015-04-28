@@ -1,0 +1,5 @@
+Comparison of runtime for algorithms in A and B
+QR with Gram-Schmidt orthogonalisation:
+0.06 sec
+QR with Givens rotations
+0.82 sec

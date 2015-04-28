@@ -12,3 +12,7 @@ backup:
 	mutt -s "Numerical Methods -- Backup" \
 		-a numeric.tar.gz -- savkopio@gmail.com < message
 	rm numeric.tar.gz message
+
+clean:
+	rm -f numerical.tar.gz message
+

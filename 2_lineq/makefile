@@ -11,7 +11,13 @@ clean:
 	rm -f *.o *.out mainA mainB mainC
 
 time: mainA mainB
-	{ \time ./mainA ; } 2> times.out
+	echo 'Comparison of runtime for algorithms in A and B' > time.out
+	echo 'Both solve exactly the same problems'
+	echo 'QR with Gram-Schmidt orthogonalisation:' >> time.out
+	\time -f "%U sec" -ao time.out ./mainA > /dev/null
+	echo 'QR with Givens rotations' >> time.out
+	\time -f "%U sec" -ao time.out ./mainB > /dev/null
+
 
 # General
 qr.o: qr.c backsub.h
