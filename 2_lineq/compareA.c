@@ -4,7 +4,7 @@
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_linalg.h>
 #include <math.h>
-#include "givens.h"
+#include "qr.h"
 
 #define	ROW	500
 #define COL	250
@@ -27,7 +27,7 @@ int main(void)
 		gsl_vector_set(y,i,sin(i)+cos(i*i));
 		for (j = 0; j < ROW; j++)
 		{
-			gsl_matrix_set (A, j, i, j*sin (i) + cos (j*i));
+			gsl_matrix_set (A, j, i, (j*sin (i) + cos (j*i))*( j+i % 2));
 		}
 	}
 
@@ -39,8 +39,8 @@ int main(void)
 	gsl_blas_dgemv(CblasNoTrans,1,A,y,0,b);
 
 	// perform QR decomposition on A and solve Ax = b for x
-	givens_qr_dec(A);
-	givens_qr_bak(A,b,x);
+	qr_dec(A,R);
+	qr_bak(A,R,b,x);
 
 	// find the norm of the vector x-y, if zero: the solution is correct
 	gsl_vector_sub(x,y);
@@ -51,9 +51,9 @@ int main(void)
 
 	// the abs. val of determinant from QR decomp and the inverse
 	gsl_matrix_memcpy(&a.matrix,B);
-	givens_qr_dec(B);
-	double d = givens_qr_det(B);
-	givens_qr_inv(B,BI,x);
+	qr_dec(B,R);
+	double d = qr_absdet(R);
+	qr_inv(B,R,BI,x);
 
 	// to evaluate Binv, we measure the entrywise norm of B*Binv - I
 	gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,&a.matrix,BI,0,R);

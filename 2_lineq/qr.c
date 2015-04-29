@@ -78,5 +78,3 @@ void qr_inv(gsl_matrix* Q, gsl_matrix* R, gsl_matrix* AI, gsl_vector* w)
 	
 	return;
 }
-
-

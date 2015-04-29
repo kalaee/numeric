@@ -6,8 +6,8 @@
 #include <math.h>
 #include "qr.h"
 
-#define	ROW	100
-#define COL	90
+#define	ROW	500
+#define COL	250
 
 int main(void)
 {

@@ -6,8 +6,11 @@
 #include <gsl/gsl_blas.h>
 #include "backsub.h"
 
+/* Cholesky decomposition A = L L^T, note that this decomposition is very picky and
+ * will only work on square positive semi-definite matrices */
 void chol_dec(gsl_matrix* A)
 {
+	// assert square matrix
 	assert(A->size1 == A->size2);
 	int i,j,k;
 	double l;
@@ -48,6 +51,7 @@ void chol_dec(gsl_matrix* A)
 	return;
 }
 
+// solve linear system LL^T x=b inplace by twice backsubstitution
 void chol_bak(gsl_matrix* LL, gsl_vector* b)
 {
 	/* assert that b is of correct size
@@ -60,9 +64,9 @@ void chol_bak(gsl_matrix* LL, gsl_vector* b)
 	backsub_upper(LL,b);
 }
 
+// estimate the determinant of the matrix from cholesky decomp
 double chol_det(gsl_matrix* LL)
 {
-	assert(LL->size1 == LL->size2);
 	int i;
 	double d=1;
 	for(i=0; i<LL->size1; i++)
@@ -78,11 +82,11 @@ void chol_inv(gsl_matrix* LL, gsl_matrix* AI)
 	// assert that AI has the corect dimensions
 	assert(AI->size1 == AI->size2 && AI->size1 == LL->size1);
 	int i;
-	// solve the systems LL^Tx_i = e_i, x_i are columns of the inverse matrix
+	// solve the systems LL^Tx_i = e_i where x_i are columns of the inverse matrix
+	gsl_matrix_set_identity(AI);
 	for(i = 0; i < AI->size1; i++)
 	{
 		gsl_vector_view xi = gsl_matrix_column(AI,i);
-		gsl_vector_set_basis(&xi.vector,i);
 		chol_bak(LL,&xi.vector);
 	}
 	return;

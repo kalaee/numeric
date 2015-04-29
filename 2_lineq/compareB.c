@@ -27,7 +27,7 @@ int main(void)
 		gsl_vector_set(y,i,sin(i)+cos(i*i));
 		for (j = 0; j < ROW; j++)
 		{
-			gsl_matrix_set (A, j, i, j*sin (i) + cos (j*i));
+			gsl_matrix_set (A, j, i, (j*sin (i) + cos (j*i))*(j+i % 2));
 		}
 	}
 
