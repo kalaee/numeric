@@ -30,7 +30,7 @@ int main(void)
 	}
 
 	// perform cyclic jacobi diagonalisation
-	rot = jacobi_cyclic(A,e,V);
+	rot = jacobi_max_row(A,e,V,JACOBI_SORT_ASC);
 
 	printf("To evaluate our implementation of Jacobi diagonalisation\n");
 	printf("we first consider a symmetric matrix with entries\n");
@@ -89,7 +89,7 @@ int main(void)
 		}
 	}
 	// diagonalise it using Jacobi's algorithm
-	rot = jacobi_cyclic(&a.matrix,&l.vector,&v.matrix);
+	rot = jacobi_max_row(&a.matrix,&l.vector,&v.matrix,JACOBI_SORT_ASC);
 	printf("\nWe now consider the Hilbert matrix, H_ij = 1/(i+j+1)\n");
 	printf("From GSL's example on eigensystems the eigenvalues for\n");
 	printf("the 4th order Hilbert matrix are\n");

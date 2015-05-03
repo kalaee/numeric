@@ -1,0 +1,33 @@
+To evaluate our implementation of Jacobi diagonalisation
+we first consider a symmetric matrix with entries
+	A_{ij} = j*sin(i)+cos(j*i) for j >= i
+and size COL=ROW=10.
+A total of 218 rotations were neccessary for convergence
+The eigenvalues are
+	-29.2866
+	-3.70939
+	-2.87808
+	-1.35719
+	0.362915
+	0.778214
+	1.90829
+	2.05314
+	9.05586
+	34.231
+Since V^-1AV = D, D = diag(eigenvalues), we expect AV == VD
+The entrywise norm of |AV - DV| is found to be
+	|AV - DV| = 2.08846e-08
+
+We now consider the Hilbert matrix, H_ij = 1/(i+j+1)
+From GSL's example on eigensystems the eigenvalues for
+the 4th order Hilbert matrix are
+	9.6702e-05
+	6.7383e-03
+	1.6914e-01
+	1.5002e+00
+Using Jacobi's cyclic algorithm we find them to be
+	9.67023e-05
+	0.00673827
+	0.169141
+	1.50021
+A total of 24 rotations were necessary.

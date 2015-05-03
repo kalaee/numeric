@@ -1,0 +1,87 @@
+Backup of Numerical Methods
+Contents:
+.
+├── 0_hello_world
+│   ├── hello.c
+│   ├── hello.o
+│   ├── mainA.c
+│   ├── mainB
+│   ├── mainB.c
+│   ├── mainB.o
+│   ├── makefile
+│   ├── out.B.txt
+│   ├── world.c
+│   └── world.o
+├── 1_interpolation
+│   ├── A.dat
+│   ├── B.dat
+│   ├── C.dat
+│   ├── cspline.c
+│   ├── cspline.h
+│   ├── cspline.o
+│   ├── lspline.c
+│   ├── lspline.h
+│   ├── lspline.o
+│   ├── mainA
+│   ├── mainA.c
+│   ├── mainB
+│   ├── mainB.c
+│   ├── mainC
+│   ├── mainC.c
+│   ├── makefile
+│   ├── plotA.pdf
+│   ├── plotA.ppl
+│   ├── plotB.pdf
+│   ├── plotB.ppl
+│   ├── plotC.pdf
+│   ├── plotC.ppl
+│   ├── qspline.c
+│   ├── qspline.h
+│   └── qspline.o
+├── 2_lineq
+│   ├── backsub.c
+│   ├── backsub.h
+│   ├── backsub.o
+│   ├── cholesky.c
+│   ├── cholesky.h
+│   ├── compareA
+│   ├── compareA.c
+│   ├── compareB
+│   ├── compareB.c
+│   ├── givens.c
+│   ├── givens.h
+│   ├── givens.o
+│   ├── mainA
+│   ├── mainA.c
+│   ├── mainB
+│   ├── mainB.c
+│   ├── mainC.c
+│   ├── makefile
+│   ├── qr.c
+│   ├── qr.h
+│   ├── qr.o
+│   └── time.out
+├── 3_eigen
+│   ├── A.out
+│   ├── jacobi.c
+│   ├── jacobi.h
+│   ├── jacobi.o
+│   ├── mainA
+│   ├── mainA.c
+│   ├── mainB
+│   ├── mainB.c
+│   ├── mainB_cyc
+│   ├── mainB_cyc.c
+│   ├── mainB_max
+│   ├── mainB_max.c
+│   ├── mainB_row
+│   ├── mainB_row.c
+│   └── makefile
+├── 4_least_squares
+│   └── makefile
+├── makefile
+├── message
+├── numeric.tar.gz
+└── README.md
+
+5 directories, 77 files

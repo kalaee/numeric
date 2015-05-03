@@ -4,6 +4,6 @@ reserve the same amount of memory.
 Note that they both call the same GSL LU decomp
 to evaluate their results.
 QR with Gram-Schmidt orthogonalisation:
-0.19 sec
+0.18 sec
 QR with Givens rotations
-2.05 sec
+2.26 sec
