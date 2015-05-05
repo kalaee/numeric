@@ -1,0 +1,9 @@
+Solve Ax = b for x, where b = Ay, using Cholesky decomp
+Evaluating the deviation between x and y:
+	|x-y| =	5.08526e-15
+
+Compare the algorithm for computation of the absolute value of the determinant with that found using LU decomp in GSL
+	det(A)/det(A)_gsl - 1 =	6.66134e-16
+
+Compute the inverse matrix Binv of B. The entrywise norm of B*Binv - I is
+	|B*Binv - I| =	5.32444e-16

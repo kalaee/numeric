@@ -4,6 +4,7 @@ push:
 	git push
 
 backup:
+	rm -f numeric.tar.gz
 	tar -cvzf numeric.tar.gz *
 	tree
 	echo 'Backup of Numerical Methods' > message
