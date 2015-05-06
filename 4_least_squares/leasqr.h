@@ -12,5 +12,5 @@ ls_workspace* ls_workspace_alloc(int n_data, int nf);
 
 void ls_workspace_free(ls_workspace* W);
 
-void lsfit(gsl_vector* x, gsl_vector* y, gsl_vector* dy, double func(int i, double z),
+void ls_fit(gsl_vector* x, gsl_vector* y, gsl_vector* dy, double func(int i, double z),
 	gsl_vector* c, gsl_matrix* S, ls_workspace* W);

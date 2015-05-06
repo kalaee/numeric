@@ -51,7 +51,7 @@ void backsub_upper_inv(gsl_matrix* U, gsl_matrix* Uinv)
 	int i;
 	for(i=0; i<U->size1; i++)
 	{
-		u = gsl_column(Uinv,i);
+		u = gsl_matrix_column(Uinv,i);
 		backsub_upper(U,&u.vector);
 	}
 	return;

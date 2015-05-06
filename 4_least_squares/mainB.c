@@ -3,7 +3,7 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_blas.h>
-#include "leasqr.h"
+#include "svd.h"
 
 #define N_DATA	20
 #define XI -1.0
@@ -51,12 +51,12 @@ int main(void)
 	}
 
 	// do the actual fitting
-	ls_workspace* w = ls_workspace_alloc(N_DATA,4);
-	ls_fit(x,y,dy,my_func,c,S,w);
-	ls_workspace_free(w);
+	svd_workspace* w = svd_workspace_alloc(N_DATA,4);
+	svd_fit(x,y,dy,my_func,c,S,w);
+	svd_workspace_free(w);
 
 	// output datapoints for plotting
-	FILE * f = fopen("A_points.dat","w");
+	FILE * f = fopen("B_points.dat","w");
 	for(i=0; i<N_DATA; i++)
 	{
 		fprintf(f,"%g\t%g\t%g\n",gsl_vector_get(x,i),
@@ -73,7 +73,7 @@ int main(void)
 		printf("%d\t%.4g\t%.4g\t%.4g\n",i,c_true[i],gsl_vector_get(c,i),sqrt(gsl_matrix_get(S,i,i)));
 	}
 	
-	f = fopen("A_fit.dat","w");
+	f = fopen("B_fit.dat","w");
 	dx = (XF - XI)/1000;
 	for(i=0; i<1000; i++)
 	{
@@ -95,21 +95,3 @@ int main(void)
 	gsl_vector_free(c);
 	gsl_matrix_free(S);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

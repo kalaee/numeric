@@ -1,0 +1,7 @@
+set terminal pdf
+set output 'plotA.pdf'
+set xlabel 'x'
+set ylabel 'y'
+set key top left
+plot 'A_fit.dat' using 1:2 w l title 'Fit', \
+'A_points.dat' using 1:2:3 w yerrorbars title 'Data'
