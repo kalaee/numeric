@@ -3,5 +3,7 @@ set output 'plotB.pdf'
 set xlabel 'x'
 set ylabel 'y'
 set key top left
-plot 'B_fit.dat' using 1:2 w l title 'Fit', \
-'B_points.dat' using 1:2:3 w yerrorbars title 'Data'
+plot 'B.dat' index 1 using 1:2 w l title '$F_c(x)$', \
+'B.dat' index 1 using 1:3 w l lt 2 color black title '$F_c(x)\pm F_{\Delta c}(x)$', \
+'B.dat' index 1 using 1:4 w l lt 2 color black title '', \
+'B.dat' index 0 using 1:2:3 w yerrorbars title 'Data'

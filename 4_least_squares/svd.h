@@ -1,7 +1,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_blas.h>
-#include "jacobi.h"
+#include "../3_eigen/jacobi.h"
 
 typedef struct
 {

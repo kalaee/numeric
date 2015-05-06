@@ -29,9 +29,10 @@ int main(void)
 	gsl_vector* y = gsl_vector_calloc(N_DATA);
 	gsl_vector* dy = gsl_vector_alloc(N_DATA);
 	gsl_vector* c = gsl_vector_alloc(4);
+	gsl_vector* dc = gsl_vector_alloc(4);
 	gsl_matrix* S = gsl_matrix_alloc(4,4);
 	int i, j;
-	double xi, dx, yi;
+	double xi, dx, yi, dyi, fxi;
 	double c_true[] = {5, 10, 2, 3};
 
 
@@ -56,60 +57,46 @@ int main(void)
 	ls_workspace_free(w);
 
 	// output datapoints for plotting
-	FILE * f = fopen("A_points.dat","w");
 	for(i=0; i<N_DATA; i++)
 	{
-		fprintf(f,"%g\t%g\t%g\n",gsl_vector_get(x,i),
+		fprintf(stderr,"%g\t%g\t%g\n",gsl_vector_get(x,i),
 								gsl_vector_get(y,i),
 								gsl_vector_get(dy,i));
 	}
-	fclose(f);
 
 	// output fitting parameters to stdout
 	printf("The fitting parameters are:\n");
 	printf("i\tc_true\tc_fit\tdc\n");
 	for(i=0; i<4; i++)
 	{
-		printf("%d\t%.4g\t%.4g\t%.4g\n",i,c_true[i],gsl_vector_get(c,i),sqrt(gsl_matrix_get(S,i,i)));
+		gsl_vector_set(dc,i,sqrt(gsl_matrix_get(S,i,i)));
+		printf("%d\t%.4g\t%.4g\t%.4g\n",i,c_true[i],gsl_vector_get(c,i),gsl_vector_get(dc,i));
 	}
 	
-	f = fopen("A_fit.dat","w");
+	// output the fitted function values to file A_fit.dat
+	// with a ROUGH estimate of the uncertainty on y
 	dx = (XF - XI)/1000;
+	fprintf(stderr,"\n\n");
 	for(i=0; i<1000; i++)
 	{
 		xi = XI + i*dx;
 		yi = 0;
+		dyi = 0;
 
 		for(j=0; j<4; j++)
 		{
-			yi += gsl_vector_get(c,j)*my_func(j,xi);
+			fxi = my_func(j,xi);
+			yi += gsl_vector_get(c,j)*fxi;
+			dyi += fabs(gsl_vector_get(dc,j)*fxi);
 		}
 
-		fprintf(f,"%g\t%g\n",xi,yi);
+		fprintf(stderr,"%g\t%g\t%g\t%g\n",xi,yi,yi+dyi,yi-dyi);
 	}
-	fclose(f);
 
 	gsl_vector_free(x);
 	gsl_vector_free(y);
 	gsl_vector_free(dy);
 	gsl_vector_free(c);
+	gsl_vector_free(dc);
 	gsl_matrix_free(S);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

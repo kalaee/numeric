@@ -2,8 +2,8 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_blas.h>
-#include "backsub.h"
-#include "qr.h"
+#include "../2_lineq/backsub.h"
+#include "../2_lineq/qr.h"
 
 // define the workspace necessary for a linear least square fit
 typedef struct
@@ -40,8 +40,7 @@ void ls_workspace_free(ls_workspace* W)
 }
 
 // fitting routine
-void ls_fit(gsl_vector* x, gsl_vector* y, gsl_vector* dy, double func(int i, double z),
-	gsl_vector* c, gsl_matrix* S, ls_workspace* W)
+void ls_fit(gsl_vector* x, gsl_vector* y, gsl_vector* dy, double func(int i, double z), gsl_vector* c, gsl_matrix* S, ls_workspace* W)
 {
 	int i,j;
 	double xi, dyi;

@@ -5,48 +5,59 @@ LDLIBS += `gsl-config --libs`
 
 # Overall
 
-all: A B
+all: A B C
 
 clean:
-	rm -f *.o *.out *.dat *.pdf mainA mainB
+	rm -f *.o *.out *.dat *.pdf mainA mainB mainC
 
 # Object files
-qr.o: qr.c backsub.h
-backsub.o: backsub.c
-leasqr.o: leasqr.c backsub.h
-jacobi.o: jacobi.c
-svd.o: svd.c jacobi.h
+qr.o: ../2_lineq/qr.c ../2_lineq/qr.h
+	$(CC) $(CLFAGS) -c $< -o $@
+backsub.o: ../2_lineq/backsub.c ../2_lineq/backsub.h
+	$(CC) $(CLFAGS) -c $< -o $@
+jacobi.o: ../3_eigen/jacobi.c ../3_eigen/jacobi.h
+	$(CC) $(CLFAGS) -c $< -o $@
+svd.o: svd.c svd.h
+leasqr.o: leasqr.c leasqr.h
 
 # Task A
-A: A.dat plotA.pdf
+A: A.out plotA.pdf
 
-plotA.pdf: plotA.ppl A_points.dat A_fit.dat
+plotA.pdf: plotA.ppl A.dat
 	pyxplot plotA.ppl
 
-A_fit.dat: mainA
-	./mainA > /dev/null
-
-A_points.dat: mainA
-	./mainA > /dev/null
-
 A.dat: mainA
-	./mainA > A.out
+	./mainA 2> A.dat
 
-mainA: mainA.c qr.o qr.h backsub.o leasqr.h leasqr.o
+A.out: mainA
+	./mainA 1> A.out 2> A.dat
 
-# Task B
-B: B.dat plotB.pdf
+mainA: mainA.c qr.o backsub.o leasqr.o
 
-plotB.pdf: plotB.ppl B_points.dat B_fit.dat
+# Task A
+B: B.out plotB.pdf
+
+plotB.pdf: plotB.ppl B.dat
 	pyxplot plotB.ppl
 
-B_fit.dat: mainB
-	./mainB > /dev/null
-
-B_points.dat: mainB
-	./mainB > /dev/null
-
 B.dat: mainB
-	./mainB > B.out
+	./mainB 2> B.dat
 
-mainB: mainB.c qr.o qr.h backsub.o svd.o svd.h jacobi.h jacobi.o
+B.out: mainB
+	./mainB 1> B.out 2> B.dat
+
+mainB: mainB.c svd.o jacobi.o
+
+# Task C
+C: C.out plotC.pdf
+
+plotC.pdf: plotC.ppl C.dat
+	pyxplot plotC.ppl
+
+C.dat: mainC
+	./mainC 2> C.dat
+
+C.out: mainC
+	./mainC 1> C.out 2> C.dat
+
+mainC: mainC.c qr.o backsub.o leasqr.o

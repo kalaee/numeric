@@ -2,7 +2,7 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_blas.h>
 #include <math.h>
-#include "jacobi.h"
+#include "../3_eigen/jacobi.h"
 
 // define the workspace necessary for a linear least square fit
 typedef struct
@@ -84,8 +84,7 @@ void svd_sol(gsl_vector* c, svd_workspace* W)
 }
 
 // least square fit using singular value decomposition
-void svd_fit(gsl_vector* x, gsl_vector* y, gsl_vector* dy, double func(int i, double z),
-		gsl_vector* c, gsl_matrix* S, svd_workspace* W)
+void svd_fit(gsl_vector* x, gsl_vector* y, gsl_vector* dy, double func(int i, double z), gsl_vector* c, gsl_matrix* S, svd_workspace* W)
 {
 	int i,j;
 	double xi, dyi;
