@@ -83,7 +83,8 @@ void svd_sol(gsl_vector* c, svd_workspace* W)
 	return;
 }
 
-// least square fit using singular value decomposition
+// least square fit using singular value decomposition, data in x, y, and dy are preserved.
+// on output S contains the covariance matrix and c the estimated fit parameters
 void svd_fit(gsl_vector* x, gsl_vector* y, gsl_vector* dy, double func(int i, double z), gsl_vector* c, gsl_matrix* S, svd_workspace* W)
 {
 	int i,j;

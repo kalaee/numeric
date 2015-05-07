@@ -39,7 +39,8 @@ void ls_workspace_free(ls_workspace* W)
 	return;
 }
 
-// fitting routine
+// fitting routine data in x, y and dy are preserved, on output S contains
+// the covariance matrix and c the estimated fitting parameters
 void ls_fit(gsl_vector* x, gsl_vector* y, gsl_vector* dy, double func(int i, double z), gsl_vector* c, gsl_matrix* S, ls_workspace* W)
 {
 	int i,j;

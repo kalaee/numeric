@@ -5,7 +5,7 @@
 #include <gsl/gsl_blas.h>
 #include "leasqr.h"
 
-#define N_DATA	20
+#define N_DATA	12
 #define XI -1.0
 #define XF 9.0
 #define NOISE 0.3
@@ -31,8 +31,8 @@ int main(void)
 	gsl_vector* c = gsl_vector_alloc(4);
 	gsl_vector* dc = gsl_vector_alloc(4);
 	gsl_matrix* S = gsl_matrix_alloc(4,4);
-	int i, j;
-	double xi, dx, yi, dyi, fxi;
+	int i, j, k;
+	double xi, dx, yi, dyi, fjxi;
 	double c_true[] = {5, 10, 2, 3};
 
 
@@ -48,7 +48,7 @@ int main(void)
 			yi += c_true[j]*my_func(j,xi);
 		}
 		gsl_vector_set(y,i,yi);
-		gsl_vector_set(dy,i,0.6+0.2*sin(i*i));
+		gsl_vector_set(dy,i,0.6+0.3*sin(i*i));
 	}
 
 	// do the actual fitting
@@ -74,7 +74,7 @@ int main(void)
 	}
 	
 	// output the fitted function values to file A_fit.dat
-	// with a ROUGH estimate of the uncertainty on y
+	// with an estimate of the uncertainty on y from the covariance matrix
 	dx = (XF - XI)/1000;
 	fprintf(stderr,"\n\n");
 	for(i=0; i<1000; i++)
@@ -85,11 +85,15 @@ int main(void)
 
 		for(j=0; j<4; j++)
 		{
-			fxi = my_func(j,xi);
-			yi += gsl_vector_get(c,j)*fxi;
-			dyi += fabs(gsl_vector_get(dc,j)*fxi);
+			fjxi = my_func(j,xi);
+			yi += gsl_vector_get(c,j)*fjxi;
+			dyi += gsl_matrix_get(S,j,j)*fjxi*fjxi;
+			for(k=0; k<j; k++)
+			{
+				dyi += 2*gsl_matrix_get(S,j,k)*fjxi*my_func(k,xi);
+			}
 		}
-
+		dyi = sqrt(dyi);
 		fprintf(stderr,"%g\t%g\t%g\t%g\n",xi,yi,yi+dyi,yi-dyi);
 	}
 
