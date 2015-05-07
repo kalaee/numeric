@@ -6,7 +6,7 @@
 
 #include "jacobi.h"
 
-#define SIZE 10
+#define SIZE 150
 
 int main(void)
 {
@@ -21,20 +21,20 @@ int main(void)
 	// We construct matrix A and make it symmetric
 	for (i = 0; i < SIZE; i++)
 	{
-		gsl_matrix_set(A,i,i,i*sin(i)+cos(i*i));
+		gsl_matrix_set(A,i,i,sin(i)+cos(i*i));
 		for (j = i+1; j < SIZE; j++)
 		{
-			gsl_matrix_set(A, i, j, j*sin(i) + cos(j*i));
+			gsl_matrix_set(A, i, j, sin(i) + cos(j*i));
 			gsl_matrix_set(A, j, i, gsl_matrix_get(A,i,j));
 		}
 	}
 
 	// perform cyclic jacobi diagonalisation
-	rot = jacobi_cyclic(A,e,V);
+	rot = jacobi_cyclic(A,e,V,JACOBI_SORT_DESC);
 
 	printf("To evaluate our implementation of Jacobi diagonalisation\n");
 	printf("we first consider a symmetric matrix with entries\n");
-	printf("\tA_{ij} = j*sin(i)+cos(j*i) for j >= i\n");
+	printf("\tA_{ij} = sin(i)+cos(j*i) for j >= i\n");
 	printf("and size COL=ROW=%d.\n",SIZE);
 	printf("A total of %d rotations were neccessary for convergence\n",rot);
 	printf("The eigenvalues are\n");
@@ -89,7 +89,7 @@ int main(void)
 		}
 	}
 	// diagonalise it using Jacobi's algorithm
-	rot = jacobi_cyclic(&a.matrix,&l.vector,&v.matrix);
+	rot = jacobi_cyclic(&a.matrix,&l.vector,&v.matrix,JACOBI_SORT_DESC);
 	printf("\nWe now consider the Hilbert matrix, H_ij = 1/(i+j+1)\n");
 	printf("From GSL's example on eigensystems the eigenvalues for\n");
 	printf("the 4th order Hilbert matrix are\n");

@@ -1,0 +1,29 @@
+Cyclic sweeps:
+Size 10,	rot: 202
+		time: 0.00 seconds
+Size 50,	rot: 7246
+		time: 0.03 seconds
+Size 100,	rot: 31552
+		time: 0.13 seconds
+Size 150,	rot: 76081
+		time: 0.40 seconds
+
+Row-wise:
+Size: 10,	rot: 3573
+		time: 0.00 seconds
+Size: 50,	rot: 238978
+		time: 0.44 seconds
+Size: 100,	rot: 4701832
+		time: 16.50 seconds
+Size: 150,	rot: 48683568
+		time: 260.30 seconds
+
+Maximum element of row:
+Size 10,	rot: 3989
+		time: 0.00 seconds
+Size 50,	rot: 111944
+		time: 0.27 seconds
+Size 100,	rot: 2349780
+		time: 12.47 seconds
+Size 150,	rot: 22177978
+		time: 134.23 seconds

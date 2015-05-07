@@ -41,7 +41,7 @@ void svd_prep(gsl_vector* c, gsl_matrix* S, svd_workspace* W)
 	// calculate A^TA and perform jacobi eigenvalue diagonalisation using cyclic sweeps
 	// eigenvalues are stored in c, eigenvectors in W->V
 	gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,W->A,W->A,0,S);
-	jacobi_cyclic(S,c,W->V);
+	jacobi_cyclic(S,c,W->V,JACOBI_SORT_DESC);
 
 	// calculate U = AVD^{1/2} stored in W->U
 	gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,W->A,W->V,0,W->U);

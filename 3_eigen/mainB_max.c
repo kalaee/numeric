@@ -7,11 +7,11 @@
 
 #include "jacobi.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char * argv[])
 {
+	int i,j,rot, SIZE;
 	assert(argc == 2);
-	int SIZE = atoi(argv[1]);
-	int i,j,rot;
+	SIZE = atoi(argv[1]);
 	gsl_matrix* A = gsl_matrix_alloc(SIZE,SIZE);
 	gsl_matrix* V = gsl_matrix_alloc(SIZE,SIZE);
 	gsl_vector* e = gsl_vector_alloc(SIZE);
@@ -19,18 +19,17 @@ int main(int argc, char* argv[])
 	// We construct matrix A and make it symmetric
 	for (i = 0; i < SIZE; i++)
 	{
-		gsl_matrix_set(A,i,i,i*sin(i)+cos(i*i));
-		for (j = 0; j < SIZE; j++)
+		gsl_matrix_set(A,i,i,sin(i)+cos(i*i));
+		for (j = i+1; j < SIZE; j++)
 		{
-			gsl_matrix_set(A, i, j, 1.0/(i+j+1.0));
+			gsl_matrix_set(A, i, j, sin(i) + cos(j*i));
 		}
 	}
 
 	// perform cyclic jacobi diagonalisation
-	rot = jacobi_max_row(A,e,V,JACOBI_SORT_ASC);
+	rot = jacobi_max_row(A,e,V,JACOBI_SORT_DESC);
 
-	printf("%d\t%d\n",SIZE,rot);
-
+	fprintf(stdout,"Size %d,\trot: %d\n",SIZE,rot);
 	gsl_matrix_free(A);
 	gsl_matrix_free(V);
 	gsl_vector_free(e);
