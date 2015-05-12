@@ -4,6 +4,7 @@
 #include <gsl/gsl_blas.h>
 #include "../2_lineq/givens.h"
 
+// newton workspace
 typedef struct
 {
 	int n;
@@ -14,6 +15,9 @@ typedef struct
 	gsl_vector* fz;
 } newton_workspace;
 
+// allocate necessary memory for newton root-finding
+// it is assumed that a function of n variables returns a vector
+// of length n
 newton_workspace* newton_workspace_alloc(int n)
 {
 	newton_workspace* W = (newton_workspace*) malloc(sizeof(newton_workspace));
@@ -27,6 +31,7 @@ newton_workspace* newton_workspace_alloc(int n)
 	return W;
 }
 
+// free allocated memory for newton root-finding
 void newton_workspace_free(newton_workspace* W)
 {
 	gsl_matrix_free(W->J);
@@ -37,6 +42,7 @@ void newton_workspace_free(newton_workspace* W)
 	free(W);
 }
 
+// scale and sum two vectors, and store them in c
 void vector_sum(double alpha, gsl_vector* a, double beta, gsl_vector* b, gsl_vector* c)
 {
 	int i;
@@ -47,6 +53,9 @@ void vector_sum(double alpha, gsl_vector* a, double beta, gsl_vector* b, gsl_vec
 	return;
 }
 
+// ordinary newton root-finding for functions with unknown derivative
+// f is the function, x is initial guess, on termination solution is stored in x
+// dx is length scale for numerical estimate of the derivative and tol the tolerance for convergence
 int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, newton_workspace* W)
 {
 	int n = W->n;
@@ -56,6 +65,7 @@ int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, doub
 	{
 		counter++;
 		f(x,W->fx);
+		// numerical estimate of derivative and store in Jacobi matrix, J
 		for(j = 0; j < n; j++)
 		{
 			gsl_vector_set(x,j,gsl_vector_get(x,j)+dx);
@@ -67,10 +77,15 @@ int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, doub
 			}
 			gsl_vector_set(x,j,gsl_vector_get(x,j)-dx);
 		}
+		// solve system J Dx = f(x)
 		givens_qr_dec(W->J);
 		lambda = 2;
 		normfx = gsl_blas_dnrm2(W->fx);
 		givens_qr_bak(W->J,W->fx,W->Dx);
+		// find lambda which satisfies f(x-l*Dx) < (1-l/2)*f(x)
+		// if not make lambda smaller: lambda = lambda/2
+		// if lambda < 0.01 does not satisfy our requirement, move anyway to
+		// to proceed from another position
 		do
 		{
 			lambda /= 2.;
@@ -79,10 +94,14 @@ int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, doub
 		} while(gsl_blas_dnrm2(W->fz) > (1-lambda/2)*normfx && lambda > 0.01);
 		gsl_vector_memcpy(x,W->z);
 		gsl_vector_memcpy(W->fx,W->fz);
+	// terminate algorithm if convergence achieved or Dx is smaller than out length scale, dx
 	} while (gsl_blas_dnrm2(W->Dx) > dx && gsl_blas_dnrm2(W->fx) > tol);
+	// return number of steps
 	return counter;
 }
 
+// newton method for root-finding with known derivative, df, x is initial guess, on output it will contain solution
+// tol is convergence tolerance and W the neccesary workspace
 int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector* x, gsl_matrix* J), gsl_vector* x, double tol, newton_workspace* W)
 {
 	int counter = 0;
@@ -91,11 +110,17 @@ int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector*
 	{
 		counter++;
 		f(x,W->fx);
+		// calculate Jacobi matrix
 		df(x,W->J);
 		givens_qr_dec(W->J);
 		lambda = 2;
 		normfx = gsl_blas_dnrm2(W->fx);
+		// solve equation J Dx = f(x)
 		givens_qr_bak(W->J,W->fx,W->Dx);
+		// find lambda which satisfies f(x-l*Dx) < (1-l/2)*f(x)
+		// if not make lambda smaller: lambda = lambda/2
+		// if lambda < 0.01 does not satisfy our requirement, move anyway to
+		// to proceed from another position
 		do
 		{
 			lambda /= 2.;
@@ -104,10 +129,15 @@ int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector*
 		} while(gsl_blas_dnrm2(W->fz) > (1-lambda/2)*normfx && lambda > 0.01);
 		gsl_vector_memcpy(x,W->z);
 		gsl_vector_memcpy(W->fx,W->fz);
+	// if convergence criteria meet, end algorithm
 	} while (gsl_blas_dnrm2(W->fx) > tol);
+	// return number of steps
 	return counter;
 }
 
+// newton method for root-finding with unknown derivative and quadratic interpolation
+// x is initial guess, on output it will contain the solution of the system
+// dx is length for numerical estimate of derivative and tol is tolerance for convergence
 int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, newton_workspace* W)
 {
 	int i,j, n = W->n, counter = 0;
@@ -116,6 +146,7 @@ int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double d
 	{
 		counter++;
 		f(x,W->fx);
+		// estimate Jacobi matrix numerically
 		for(j = 0; j < n; j++)
 		{
 			gsl_vector_set(x,j,gsl_vector_get(x,j)+dx);
@@ -127,13 +158,18 @@ int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double d
 			}
 			gsl_vector_set(x,j,gsl_vector_get(x,j)-dx);
 		}
+		// solve J Dx = f(x)
 		givens_qr_dec(W->J);
 		normfx = gsl_blas_dnrm2(W->fx);
 		givens_qr_bak(W->J,W->fx,W->Dx);
+		// find lambda which satisfies f(x-l*Dx) < (1-l/2)*f(x)
+		// if not make lambda smaller using quadratic interpolation for minimization
+		// if lambda < 0.01 does not satisfy our requirement, move anyway to
+		// to proceed from another position
+		// note that quadratic interpolation will only work close to an actual solution
 		lambda = 1;
 		vector_sum(1,x,-lambda,W->Dx,W->z);
-		f(W->z,W->fz);
-		g0 = 0.5*normfx*normfx;
+		f(W->z,W->fz);	g0 = 0.5*normfx*normfx;
 		gp0 = -normfx*normfx;
 		normfz = gsl_blas_dnrm2(W->fz);
 		while(normfz > (1-lambda/2)*normfx && lambda > 0.01)
@@ -147,6 +183,8 @@ int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double d
 		}
 		gsl_vector_memcpy(x,W->z);
 		gsl_vector_memcpy(W->fx,W->fz);
+	// end algorithm if Dx is smaller than length scale dx or convergence achieved
 	} while (gsl_blas_dnrm2(W->Dx) > dx && normfz > tol);
+	// return number of steps before solution
 	return counter;
 }
