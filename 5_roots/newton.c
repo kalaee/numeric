@@ -37,7 +37,7 @@ void newton_workspace_free(newton_workspace* W)
 	free(W);
 }
 
-void vector_add(double alpha, gsl_vector* a, double beta, gsl_vector* b, gsl_vector* c)
+void vector_sum(double alpha, gsl_vector* a, double beta, gsl_vector* b, gsl_vector* c)
 {
 	int i;
 	for(i=0; i<a->size; i++)
@@ -74,9 +74,9 @@ int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, doub
 		do
 		{
 			lambda /= 2.;
-			vector_add(1,x,-lambda,W->Dx,W->z);
+			vector_sum(1,x,-lambda,W->Dx,W->z);
 			f(W->z,W->fz);
-		} while(gsl_blas_dnrm2(W->fz) > normfx && lambda > 0.01);
+		} while(gsl_blas_dnrm2(W->fz) > (1-lambda/2)*normfx && lambda > 0.01);
 		gsl_vector_memcpy(x,W->z);
 		gsl_vector_memcpy(W->fx,W->fz);
 	} while (gsl_blas_dnrm2(W->Dx) > dx && gsl_blas_dnrm2(W->fx) > tol);
@@ -99,44 +99,54 @@ int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector*
 		do
 		{
 			lambda /= 2.;
-			vector_add(1,x,-lambda,W->Dx,W->z);
+			vector_sum(1,x,-lambda,W->Dx,W->z);
 			f(W->z,W->fz);
-		} while(gsl_blas_dnrm2(W->fz) > normfx && lambda > 0.01);
+		} while(gsl_blas_dnrm2(W->fz) > (1-lambda/2)*normfx && lambda > 0.01);
 		gsl_vector_memcpy(x,W->z);
 		gsl_vector_memcpy(W->fx,W->fz);
 	} while (gsl_blas_dnrm2(W->fx) > tol);
 	return counter;
 }
 
-int newton_derivative_interp(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector* x, gsl_matrix* J), gsl_vector* x, double tol, newton_workspace* W)
+int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, newton_workspace* W)
 {
-	int counter = 0;
-	double g, gp, gl, c, lambda, normfx, normfz;
+	int i,j, n = W->n, counter = 0;
+	double g0, gp0, gl, c, lambda, normfx, normfz;
 	do
 	{
 		counter++;
 		f(x,W->fx);
-		df(x,W->J);
+		for(j = 0; j < n; j++)
+		{
+			gsl_vector_set(x,j,gsl_vector_get(x,j)+dx);
+			f(x,W->fz);
+			gsl_vector_sub(W->fz,W->fx);
+			for(i=0; i<n; i++)
+			{
+				gsl_matrix_set(W->J,i,j,gsl_vector_get(W->fz,i)/dx);
+			}
+			gsl_vector_set(x,j,gsl_vector_get(x,j)-dx);
+		}
 		givens_qr_dec(W->J);
 		normfx = gsl_blas_dnrm2(W->fx);
 		givens_qr_bak(W->J,W->fx,W->Dx);
 		lambda = 1;
-		vector_add(1,x,-lambda,W->Dx,W->z);
+		vector_sum(1,x,-lambda,W->Dx,W->z);
 		f(W->z,W->fz);
+		g0 = 0.5*normfx*normfx;
+		gp0 = -normfx*normfx;
 		normfz = gsl_blas_dnrm2(W->fz);
-		while(normfz > normfx && lambda > 0.01)
+		while(normfz > (1-lambda/2)*normfx && lambda > 0.01)
 		{
-			g = 0.5*normfx*normfx;
-			gp = -normfx*normfx;
 			gl = 0.5*normfz*normfz;
-			c = (gl-g-gp*lambda)/lambda/lambda;
-			lambda = -gp/2/c;
-			vector_add(1,x,-lambda,W->Dx,W->z);
+			c = (gl-g0-gp0*lambda)/lambda/lambda;
+			lambda = -gp0/2/c;
+			vector_sum(1,x,-lambda,W->Dx,W->z);
 			f(W->z,W->fz);
 			normfz = gsl_blas_dnrm2(W->fz);
 		}
 		gsl_vector_memcpy(x,W->z);
 		gsl_vector_memcpy(W->fx,W->fz);
-	} while (normfz > tol);
+	} while (gsl_blas_dnrm2(W->Dx) > dx && normfz > tol);
 	return counter;
 }

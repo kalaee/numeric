@@ -66,6 +66,33 @@ void df3(gsl_vector* x0, gsl_matrix* J)
 	gsl_matrix_set(J,1,1,-26+4*x+12*y*y);
 }
 
+void f4(gsl_vector* x0, gsl_vector* fx)
+{
+	double 	x = gsl_vector_get(x0,0),
+			y = gsl_vector_get(x0,1),
+			z = gsl_vector_get(x0,2);
+	gsl_vector_set(fx,0,exp(x)+exp(y/z)-1);
+	gsl_vector_set(fx,1,sin(y)-cos(y)*z),
+	gsl_vector_set(fx,2,x*y*z-100);
+	return;
+}
+
+void df4(gsl_vector* x0, gsl_matrix* J)
+{
+	double 	x = gsl_vector_get(x0,0),
+			y = gsl_vector_get(x0,1),
+			z = gsl_vector_get(x0,2);
+	gsl_matrix_set(J,0,0,exp(x));
+	gsl_matrix_set(J,0,1,1/z*exp(y/z));
+	gsl_matrix_set(J,0,2,-y*exp(y/z)/z/z);
+	gsl_matrix_set(J,1,0,0);
+	gsl_matrix_set(J,1,1,cos(y)+sin(y)*z);
+	gsl_matrix_set(J,1,2,-cos(y));
+	gsl_matrix_set(J,2,0,y*z);
+	gsl_matrix_set(J,2,1,x*z);
+	gsl_matrix_set(J,2,2,x*y);
+}
+
 int main(void)
 {
 	int n = 2, calls;
@@ -104,8 +131,31 @@ int main(void)
 	fprintf(stdout,"(x,y) = (%g,\t%g),\n",gsl_vector_get(x0,0),gsl_vector_get(x0,1));
 	fprintf(stdout,"f(x,y) = (%g,\t%g)\n",gsl_vector_get(fx,0),gsl_vector_get(fx,1));
 
+	gsl_vector* x1 = gsl_vector_alloc(3);
+	gsl_vector* fx1 = gsl_vector_alloc(3);
+	newton_workspace* W1 = newton_workspace_alloc(3);
+	gsl_vector_set(x1,0,-2);
+	gsl_vector_set(x1,1,8);
+	gsl_vector_set(x1,2,2);
+	fprintf(stdout,"\nFinding the solution to the system of equation\n");
+	fprintf(stdout,"\texp(x)+exp(y/z) = 1\n");
+	fprintf(stdout,"\tsin(y) = cos(x)*z\n");
+	fprintf(stdout,"\tx*y*z = 100\n");
+	fprintf(stdout,"Initial guess\n");
+	f4(x1,fx1);
+	fprintf(stdout,"(x,y) = (%g,\t%g,\t%g),\n",gsl_vector_get(x1,0),gsl_vector_get(x1,1),gsl_vector_get(x1,2));
+	fprintf(stdout,"f(x,y) = (%g,\t%g,\t%g)\n",gsl_vector_get(fx1,0),gsl_vector_get(fx1,1),gsl_vector_get(fx1,2));
+	calls = newton_derivative(f4,df4,x1,TOL,W1);
+	f4(x1,fx1);fprintf(stdout,"calls:\t%d\n",calls);
+	fprintf(stdout,"(x,y) = (%g,\t%g,\t%g),\n",gsl_vector_get(x1,0),gsl_vector_get(x1,1),gsl_vector_get(x1,2));
+	fprintf(stdout,"f(x,y) = (%g,\t%g,\t%g)\n",gsl_vector_get(fx1,0),gsl_vector_get(fx1,1),gsl_vector_get(fx1,2));
+
 	gsl_vector_free(x0);
 	gsl_vector_free(fx);
+	gsl_vector_free(x1);
+	gsl_vector_free(fx1);
+	newton_workspace_free(W1);
 	newton_workspace_free(W);
+
 	return 0;
 }

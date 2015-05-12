@@ -14,4 +14,4 @@ newton_workspace* newton_workspace_alloc(int n);
 void newton_workspace_free(newton_workspace* W);
 int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, newton_workspace* W);
 int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector* x, gsl_matrix* J), gsl_vector* x, double tol, newton_workspace* W);
-int newton_derivative_interp(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector* x, gsl_matrix* J), gsl_vector* x, double tol, newton_workspace* W);
+int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, newton_workspace* W);

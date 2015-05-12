@@ -2,18 +2,29 @@ Solving the system of equations
 	Axy = 1
 	exp(-x)+exp(-y)=1+1/A
 where A = 10000
-calls:	14
+calls:	20
 (x,y) = (1.09816e-05,	9.10615),
-f(x,y) = (-2.69262e-12,	1.53101e-14)
+f(x,y) = (-7.39749e-11,	4.12326e-13)
 
 Finding the minimum of Rosenbrock's valley function
 	f(x,y) = (1-x)^2+100*(y-x^2)^2
-calls:	176
+calls:	429
 (x,y) = (1,	1),
-f(x,y) = (1.27676e-13,	-6.66134e-14)
+f(x,y) = (3.07596e-11,	-1.56541e-11)
 
 Finding the minimum of Himmelblau's function
 	f(x,y) = (x^2+y-11)^2+(x+y^2-7)^2
 calls:	7
 (x,y) = (-2.80512,	3.13131),
 f(x,y) = (2.01414e-14,	5.11268e-13)
+
+Finding the solution to the system of equation
+	exp(x)+exp(y/z) = 1
+	sin(y) = cos(x)*z
+	x*y*z = 100
+Initial guess
+(x,y) = (-2,	8,	2),
+f(x,y) = (53.7335,	1.28036,	-132)
+calls:	164
+(x,y) = (-0.86766,	7.92262,	-14.5473),
+f(x,y) = (-8.92619e-14,	-3.97349e-13,	3.61524e-11)
