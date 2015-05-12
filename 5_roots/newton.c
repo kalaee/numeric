@@ -135,6 +135,7 @@ int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector*
 	return counter;
 }
 
+
 // newton method for root-finding with unknown derivative and quadratic interpolation
 // x is initial guess, on output it will contain the solution of the system
 // dx is length for numerical estimate of derivative and tol is tolerance for convergence
@@ -169,10 +170,11 @@ int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double d
 		// note that quadratic interpolation will only work close to an actual solution
 		lambda = 1;
 		vector_sum(1,x,-lambda,W->Dx,W->z);
-		f(W->z,W->fz);	g0 = 0.5*normfx*normfx;
+		f(W->z,W->fz);
+		g0 = 0.5*normfx*normfx;
 		gp0 = -normfx*normfx;
 		normfz = gsl_blas_dnrm2(W->fz);
-		while(normfz > (1-lambda/2)*normfx && lambda > 0.01)
+		while(normfz > normfx && lambda > 0.1)
 		{
 			gl = 0.5*normfz*normfz;
 			c = (gl-g0-gp0*lambda)/lambda/lambda;
@@ -183,8 +185,9 @@ int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double d
 		}
 		gsl_vector_memcpy(x,W->z);
 		gsl_vector_memcpy(W->fx,W->fz);
-	// end algorithm if Dx is smaller than length scale dx or convergence achieved
+	// end algorithm if Dx is smaller than length scale dx or convergence is achieved
 	} while (gsl_blas_dnrm2(W->Dx) > dx && normfz > tol);
 	// return number of steps before solution
 	return counter;
 }
+

@@ -5,7 +5,7 @@ where A = 10000
 Initial guess
 (x,y) = (-2,	8),
 f(x,y) = (-160001,	6.38929)
-calls:	20
+calls:	94
 (x,y) = (1.09816e-05,	9.10615),
 f(x,y) = (-7.39202e-11,	4.22318e-13)
 
@@ -14,7 +14,7 @@ Finding the minimum of Rosenbrock's valley function
 Initial guess
 (x,y) = (-2,	8),
 f(x,y) = (3194,	800)
-calls:	429
+calls:	4279
 (x,y) = (1,	1),
 f(x,y) = (-3.40139e-10,	4.32321e-11)
 
@@ -23,7 +23,7 @@ Finding the minimum of Himmelblau's function
 Initial guess
 (x,y) = (-2,	8),
 f(x,y) = (102,	1762)
-calls:	7
+calls:	28
 (x,y) = (-2.80512,	3.13131),
 f(x,y) = (5.91233e-14,	4.86345e-12)
 
@@ -32,8 +32,8 @@ Finding the solution to the system of equation
 	sin(y) = cos(x)*z
 	x*y*z = 100
 Initial guess
-(x,y) = (-2,	8,	2),
-f(x,y) = (53.7335,	1.28036,	-132)
-calls:	164
-(x,y) = (-0.86766,	7.92262,	-14.5473),
-f(x,y) = (-7.01439e-13,	2.39253e-12,	-2.47766e-10)
+(x,y) = (-5,	10,	-10),
+f(x,y) = (-0.625383,	-8.93474,	400)
+calls:	27
+(x,y) = (-0.625468,	11.0647,	-14.4496),
+f(x,y) = (-1.08802e-14,	-1.59206e-13,	-3.97904e-13)

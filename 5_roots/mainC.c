@@ -6,6 +6,8 @@
 #define TOL	1e-9
 #define DX 1e-6
 
+int calls;
+
 void f1(gsl_vector* x0, gsl_vector* fx)
 {
 	double 	A = 1.0e4,
@@ -13,6 +15,7 @@ void f1(gsl_vector* x0, gsl_vector* fx)
 			y = gsl_vector_get(x0,1);
 	gsl_vector_set(fx,0,A*x*y-1);
 	gsl_vector_set(fx,1,exp(-x)+exp(-y)-1-1/A);
+	calls++;
 	return;
 }
 
@@ -22,6 +25,7 @@ void f2(gsl_vector* x0, gsl_vector* fx)
 			y = gsl_vector_get(x0,1);
 	gsl_vector_set(fx,0,2*(x-1)-400*x*(y-x*x));
 	gsl_vector_set(fx,1,200*(y-x*x));
+	calls++;
 	return;
 }
 
@@ -31,6 +35,7 @@ void f3(gsl_vector* x0, gsl_vector* fx)
 			y = gsl_vector_get(x0,1);
 	gsl_vector_set(fx,0,4*(x*x+y-11)*x+2*(x+y*y-7));
 	gsl_vector_set(fx,1,2*(x*x+y-11)+4*(x+y*y-7)*y);
+	calls++;
 	return;
 }
 
@@ -42,12 +47,13 @@ void f4(gsl_vector* x0, gsl_vector* fx)
 	gsl_vector_set(fx,0,exp(x)+exp(y/z)-1);
 	gsl_vector_set(fx,1,sin(y)-cos(y)*z),
 	gsl_vector_set(fx,2,x*y*z-100);
+	calls++;
 	return;
 }
 
 int main(void)
 {
-	int n = 2, calls;
+	int n = 2;
 	gsl_vector* x0 = gsl_vector_alloc(n);
 	gsl_vector* fx = gsl_vector_alloc(n);
 	gsl_vector_set(x0,0,-2);
@@ -61,9 +67,10 @@ int main(void)
 	f1(x0,fx);
 	fprintf(stdout,"(x,y) = (%g,\t%g),\n",gsl_vector_get(x0,0),gsl_vector_get(x0,1));
 	fprintf(stdout,"f(x,y) = (%g,\t%g)\n",gsl_vector_get(fx,0),gsl_vector_get(fx,1));
-	calls = newton_interp(f1,x0,DX,TOL,W);
-	f1(x0,fx);
+	calls = 0;
+	newton_interp(f1,x0,DX,TOL,W);
 	fprintf(stdout,"calls:\t%d\n",calls);
+	f1(x0,fx);
 	fprintf(stdout,"(x,y) = (%g,\t%g),\n",gsl_vector_get(x0,0),gsl_vector_get(x0,1));
 	fprintf(stdout,"f(x,y) = (%g,\t%g)\n",gsl_vector_get(fx,0),gsl_vector_get(fx,1));
 
@@ -75,8 +82,10 @@ int main(void)
 	f2(x0,fx);
 	fprintf(stdout,"(x,y) = (%g,\t%g),\n",gsl_vector_get(x0,0),gsl_vector_get(x0,1));
 	fprintf(stdout,"f(x,y) = (%g,\t%g)\n",gsl_vector_get(fx,0),gsl_vector_get(fx,1));
-	calls = newton_interp(f2,x0,DX,TOL,W);
-	f2(x0,fx);fprintf(stdout,"calls:\t%d\n",calls);
+	calls = 0;
+	newton_interp(f2,x0,DX,TOL,W);
+	fprintf(stdout,"calls:\t%d\n",calls);
+	f2(x0,fx);
 	fprintf(stdout,"(x,y) = (%g,\t%g),\n",gsl_vector_get(x0,0),gsl_vector_get(x0,1));
 	fprintf(stdout,"f(x,y) = (%g,\t%g)\n",gsl_vector_get(fx,0),gsl_vector_get(fx,1));
 
@@ -88,17 +97,19 @@ int main(void)
 	f3(x0,fx);
 	fprintf(stdout,"(x,y) = (%g,\t%g),\n",gsl_vector_get(x0,0),gsl_vector_get(x0,1));
 	fprintf(stdout,"f(x,y) = (%g,\t%g)\n",gsl_vector_get(fx,0),gsl_vector_get(fx,1));
-	calls = newton_interp(f3,x0,DX,TOL,W);
-	f3(x0,fx);fprintf(stdout,"calls:\t%d\n",calls);
+	calls = 0;
+	newton_interp(f3,x0,DX,TOL,W);
+	fprintf(stdout,"calls:\t%d\n",calls);
+	f3(x0,fx);
 	fprintf(stdout,"(x,y) = (%g,\t%g),\n",gsl_vector_get(x0,0),gsl_vector_get(x0,1));
 	fprintf(stdout,"f(x,y) = (%g,\t%g)\n",gsl_vector_get(fx,0),gsl_vector_get(fx,1));
 
 	gsl_vector* x1 = gsl_vector_alloc(3);
 	gsl_vector* fx1 = gsl_vector_alloc(3);
 	newton_workspace* W1 = newton_workspace_alloc(3);
-	gsl_vector_set(x1,0,-2);
-	gsl_vector_set(x1,1,8);
-	gsl_vector_set(x1,2,2);
+	gsl_vector_set(x1,0,-5);
+	gsl_vector_set(x1,1,10);
+	gsl_vector_set(x1,2,-10);
 	fprintf(stdout,"\nFinding the solution to the system of equation\n");
 	fprintf(stdout,"\texp(x)+exp(y/z) = 1\n");
 	fprintf(stdout,"\tsin(y) = cos(x)*z\n");
@@ -107,8 +118,10 @@ int main(void)
 	f4(x1,fx1);
 	fprintf(stdout,"(x,y) = (%g,\t%g,\t%g),\n",gsl_vector_get(x1,0),gsl_vector_get(x1,1),gsl_vector_get(x1,2));
 	fprintf(stdout,"f(x,y) = (%g,\t%g,\t%g)\n",gsl_vector_get(fx1,0),gsl_vector_get(fx1,1),gsl_vector_get(fx1,2));
-	calls = newton(f4,x1,DX,TOL,W1);
-	f4(x1,fx1);fprintf(stdout,"calls:\t%d\n",calls);
+	calls = 0;
+	newton_interp(f4,x1,DX,TOL,W1);
+	fprintf(stdout,"calls:\t%d\n",calls);
+	f4(x1,fx1);
 	fprintf(stdout,"(x,y) = (%g,\t%g,\t%g),\n",gsl_vector_get(x1,0),gsl_vector_get(x1,1),gsl_vector_get(x1,2));
 	fprintf(stdout,"f(x,y) = (%g,\t%g,\t%g)\n",gsl_vector_get(fx1,0),gsl_vector_get(fx1,1),gsl_vector_get(fx1,2));
 
