@@ -93,9 +93,8 @@ int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, doub
 			f(W->z,W->fz);
 		} while(gsl_blas_dnrm2(W->fz) > (1-lambda/2)*normfx && lambda > 0.01);
 		gsl_vector_memcpy(x,W->z);
-		gsl_vector_memcpy(W->fx,W->fz);
 	// terminate algorithm if convergence achieved or Dx is smaller than out length scale, dx
-	} while (gsl_blas_dnrm2(W->Dx) > dx && gsl_blas_dnrm2(W->fx) > tol);
+	} while (gsl_blas_dnrm2(W->Dx) > dx && gsl_blas_dnrm2(W->fz) > tol);
 	// return number of steps
 	return counter;
 }
@@ -128,9 +127,8 @@ int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector*
 			f(W->z,W->fz);
 		} while(gsl_blas_dnrm2(W->fz) > (1-lambda/2)*normfx && lambda > 0.01);
 		gsl_vector_memcpy(x,W->z);
-		gsl_vector_memcpy(W->fx,W->fz);
 	// if convergence criteria meet, end algorithm
-	} while (gsl_blas_dnrm2(W->fx) > tol);
+	} while (gsl_blas_dnrm2(W->fz) > tol);
 	// return number of steps
 	return counter;
 }
@@ -184,7 +182,6 @@ int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double d
 			normfz = gsl_blas_dnrm2(W->fz);
 		}
 		gsl_vector_memcpy(x,W->z);
-		gsl_vector_memcpy(W->fx,W->fz);
 	// end algorithm if Dx is smaller than length scale dx or convergence is achieved
 	} while (gsl_blas_dnrm2(W->Dx) > dx && normfz > tol);
 	// return number of steps before solution
