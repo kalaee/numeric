@@ -5,18 +5,18 @@ where A = 10000
 Initial guess
 (x,y) = (-2,	8),
 f(x,y) = (-160001,	6.38929)
-calls:	54
+calls:	28
 (x,y) = (1.09816e-05,	9.10615),
-f(x,y) = (-7.39749e-11,	4.12326e-13)
+f(x,y) = (-2.69262e-12,	1.53101e-14)
 
 Finding the minimum of Rosenbrock's valley function
 	f(x,y) = (1-x)^2+100*(y-x^2)^2
 Initial guess
 (x,y) = (-2,	8),
 f(x,y) = (3194,	800)
-calls:	3421
+calls:	1261
 (x,y) = (1,	1),
-f(x,y) = (3.07596e-11,	-1.56541e-11)
+f(x,y) = (1.27676e-13,	-6.66134e-14)
 
 Finding the minimum of Himmelblau's function
 	f(x,y) = (x^2+y-11)^2+(x+y^2-7)^2

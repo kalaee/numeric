@@ -3,6 +3,7 @@
 #include <gsl/gsl_blas.h>
 #include <math.h>
 #include "../2_lineq/givens.h"
+#include "../libs/vector.h"
 
 // workspace struceture for minimisation using Newton's method
 typedef struct
@@ -12,17 +13,6 @@ typedef struct
 	gsl_vector* z;
 	gsl_matrix* H;
 } min_newton_workspace;
-
-// scale and sum two vectors, and store them in c
-void vector_sum(double alpha, gsl_vector* a, double beta, gsl_vector* b, gsl_vector* c)
-{
-	int i;
-	for(i=0; i<a->size; i++)
-	{
-		gsl_vector_set(c,i,alpha*gsl_vector_get(a,i)+beta*gsl_vector_get(b,i));
-	}
-	return;
-}
 
 // allocate memory for newton workspace, n is number of variables
 min_newton_workspace* min_newton_workspace_alloc(int n)
@@ -70,8 +60,9 @@ int min_newton(double f(gsl_vector* x), void gradient(gsl_vector* x, gsl_vector*
 		givens_qr_bak(W->H,W->df,W->Dx);
 		// attempt a step x -> z = x+lambda*Dx
 		// if f(z) does not satisfy Armijo condition,
-		// f(z) < f(x) + alpha*lambda*Dx^T*df
+		// f(z) < f(x) + alpha*lambda*Dx^T*df,
 		// backtrack using lambda -> lambda/2 and attempt again
+		// if lambda too small, take step just to continue somewhere else
 		gsl_blas_ddot(W->df,W->Dx,&dot);
 		lambda = -2;
 		do
@@ -79,7 +70,7 @@ int min_newton(double f(gsl_vector* x), void gradient(gsl_vector* x, gsl_vector*
 			lambda /= 2;
 			vector_sum(1,x,lambda,W->Dx,W->z);
 			fz = f(W->z);
-		} while(fz > fx + alpha*lambda*dot);
+		} while(fz > fx + alpha*lambda*dot && lambda > 0.01);
 		gsl_vector_memcpy(x,W->z);
 		gradient(x,W->df);
 	// if norm of gradient is lower than tol convergence is achieved
@@ -87,3 +78,4 @@ int min_newton(double f(gsl_vector* x), void gradient(gsl_vector* x, gsl_vector*
 	// return number of steps taken during minimisation
 	return steps;
 }
+

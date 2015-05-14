@@ -3,9 +3,8 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_blas.h>
 #include "../2_lineq/givens.h"
-#include "../libs/vector.h"
-
-// newton workspace
+#include "vector.h"
+// roots_newton workspace
 typedef struct
 {
 	int n;
@@ -14,14 +13,14 @@ typedef struct
 	gsl_vector* Dx;
 	gsl_vector* fx;
 	gsl_vector* fz;
-} newton_workspace;
+} roots_newton_workspace;
 
-// allocate necessary memory for newton root-finding
+// allocate necessary memory for roots_newton root-finding
 // it is assumed that a function of n variables returns a vector
 // of length n
-newton_workspace* newton_workspace_alloc(int n)
+roots_newton_workspace* roots_newton_workspace_alloc(int n)
 {
-	newton_workspace* W = (newton_workspace*) malloc(sizeof(newton_workspace));
+	roots_newton_workspace* W = (roots_newton_workspace*) malloc(sizeof(roots_newton_workspace));
 	W->n = n;
 	W->J = gsl_matrix_alloc(n,n);
 	W->z = gsl_vector_alloc(n);
@@ -32,8 +31,8 @@ newton_workspace* newton_workspace_alloc(int n)
 	return W;
 }
 
-// free allocated memory for newton root-finding
-void newton_workspace_free(newton_workspace* W)
+// free allocated memory for roots_newton root-finding
+void roots_newton_workspace_free(roots_newton_workspace* W)
 {
 	gsl_matrix_free(W->J);
 	gsl_vector_free(W->z);
@@ -43,10 +42,10 @@ void newton_workspace_free(newton_workspace* W)
 	free(W);
 }
 
-// ordinary newton root-finding for functions with unknown derivative
+// ordinary roots_newton root-finding for functions with unknown derivative
 // f is the function, x is initial guess, on termination solution is stored in x
 // dx is length scale for numerical estimate of the derivative and tol the tolerance for convergence
-int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, newton_workspace* W)
+int roots_newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, roots_newton_workspace* W)
 {
 	int n = W->n;
 	int i,j, counter = 0;
@@ -89,9 +88,9 @@ int newton(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, doub
 	return counter;
 }
 
-// newton method for root-finding with known derivative, df, x is initial guess, on output it will contain solution
+// roots_newton method for root-finding with known derivative, df, x is initial guess, on output it will contain solution
 // tol is convergence tolerance and W the neccesary workspace
-int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector* x, gsl_matrix* J), gsl_vector* x, double tol, newton_workspace* W)
+int roots_newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector* x, gsl_matrix* J), gsl_vector* x, double tol, roots_newton_workspace* W)
 {
 	int counter = 0;
 	double lambda, normfx;
@@ -115,7 +114,7 @@ int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector*
 			lambda /= 2.;
 			vector_sum(1,x,-lambda,W->Dx,W->z);
 			f(W->z,W->fz);
-		} while(gsl_blas_dnrm2(W->fz) > normfx && lambda > 0.01);
+		} while(gsl_blas_dnrm2(W->fz) > (1-lambda/2)*normfx && lambda > 0.01);
 		gsl_vector_memcpy(x,W->z);
 	// if convergence criteria meet, end algorithm
 	} while (gsl_blas_dnrm2(W->fz) > tol);
@@ -124,10 +123,10 @@ int newton_derivative(void f(gsl_vector* x, gsl_vector* fx), void df(gsl_vector*
 }
 
 
-// newton method for root-finding with unknown derivative and quadratic interpolation
+// roots_newton method for root-finding with unknown derivative and quadratic interpolation
 // x is initial guess, on output it will contain the solution of the system
 // dx is length for numerical estimate of derivative and tol is tolerance for convergence
-int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, newton_workspace* W)
+int roots_newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double dx, double tol, roots_newton_workspace* W)
 {
 	int i,j, n = W->n, counter = 0;
 	double g0, gp0, gl, c, lambda, normfx, normfz;
@@ -162,7 +161,7 @@ int newton_interp(void f(gsl_vector* x, gsl_vector* fx), gsl_vector* x, double d
 		g0 = 0.5*normfx*normfx;
 		gp0 = -normfx*normfx;
 		normfz = gsl_blas_dnrm2(W->fz);
-		while(normfz > normfx && lambda > 0.01)
+		while(normfz > normfx && lambda > 0.1)
 		{
 			gl = 0.5*normfz*normfz;
 			c = (gl-g0-gp0*lambda)/lambda/lambda;

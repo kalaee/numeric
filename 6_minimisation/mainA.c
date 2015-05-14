@@ -2,7 +2,7 @@
 #include <gsl/gsl_matrix.h>
 #include <math.h>
 #include <stdio.h>
-#include "optim.h"
+#include "min_newton.h"
 
 #define	TOL	1e-9
 #define ALPHA	1e-4
