@@ -4,7 +4,7 @@ CFLAGS += `gsl-config --cflags`
 LDLIBS += `gsl-config --libs`
 
 # Overall
-all: A B 
+all: A B C
 
 clean:
 	rm -f *.o *.out mainA mainB mainC
@@ -20,13 +20,19 @@ roots_newton.o: ../libs/roots_newton.c ../libs/roots_newton.h
 	$(CC) $(CFLAGS) -c $< -o $@
 min_newton.o: min_newton.c min_newton.h
 min_newton_sr1.o: min_newton_sr1.c min_newton_sr1.h
+simplex.o: simplex.c simplex.h
 
 # Task A
 A: mainA
-	./mainA 1> A.out
+	./mainA > A.out
 mainA: mainA.c givens.o backsub.o min_newton.o vector.o
 
 # Task B
 B: mainB
-	./mainB 1> B.out
+	./mainB > B.out
 mainB: mainB.c backsub.o givens.o min_newton.o min_newton_sr1.o vector.o roots_newton.o
+
+#Task C
+C: mainC
+	./mainC > C.out
+mainC: mainC.c simplex.o

@@ -1,0 +1,15 @@
+Rosenbrock's valley function:
+Initial guess:
+x =	-3,	10
+f(x) =	116
+After 6 steps:
+x = 	1,	1
+f(x) = 	2.03178e-23
+
+Himmelblau's function:
+Initial guess:
+x =	-3,	10
+f(x) =	8164
+After 8 steps:
+x = 	-2.80512,	3.13131
+f(x) = 	7.88861e-31

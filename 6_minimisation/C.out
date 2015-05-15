@@ -1,0 +1,20 @@
+Minimising Rosenbrock's valley function
+Domain of initial position: -10 < x,y < 10
+After 181 steps the function is minimised:
+(x,y) = (1	1)
+f(x,y) = 3.38258e-20
+
+Minimising Himmelblau's function
+Domain of initial position: -10 < x,y < 10
+After 84 steps the function is minimised:
+(x,y) = (3	2)
+f(x,y) = 7.80471e-19
+
+Minimising Three-Hump Camel function
+Domain of initial position: -5 < x,y < 5
+After 91 steps the function is minimised:
+(x,y) = (-1.74755	0.873776)
+f(x,y) = 0.298638
+Note that although THC has a global minimum at (x,y) = (0,0)
+it also has two local minima close the global one, which might be
+reached instead.

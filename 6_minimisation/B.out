@@ -1,0 +1,50 @@
+
+Rosenbrock's function:
+Initial guess:
+x =	-3,	10
+True Solution
+x =	1,	1
+Newton's minimisation method:
+	steps=6
+	x= 1	1
+Quasi-Newton's with SR1:
+	steps=19353
+	x= 1	1
+Newton's root-finding method:
+	steps=221
+	x= 1	1
+
+Himmelblau's function:
+Initial guess:
+x =	-3,	10
+True Solution
+x =	-2.80512,	3.13131
+Note that the function has more global minima,
+yet, the above solution appears to be the one relevant from our initial guess
+Newton's minimisation method:
+	steps=8
+	x= -2.80512	3.13131
+Quasi-Newton's with SR1:
+	steps=30
+	x= -2.80512	3.13131
+Newton's root-finding method:
+	steps=8
+	x= -2.80512	3.13131
+
+Three-Hump Camel function (THC):
+Initial guess:
+x =	-0.5,	10
+True Solution
+x =	0,	0
+Note that although THC has one global minimum it also has two other local minima
+close to the global minimum. Depending on the initial guess the algorithms might
+find these instead and terminate.
+Newton's minimisation method:
+	steps=6
+	x= 1.07054	-0.535271
+Quasi-Newton's with SR1:
+	steps=14
+	x= 2.54862e-12	-1.27431e-12
+Newton's root-finding method:
+	steps=6
+	x= 1.07054	-0.535271
