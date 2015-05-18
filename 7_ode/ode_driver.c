@@ -2,7 +2,7 @@
 #include <gsl/gsl_blas.h>
 #include <math.h>
 
-#define ODE_SUCCES	0
+#define ODE_SUCCESS	0
 #define ODE_FAIL	1
 #define ODE_FAIL_UPPER	1000
 
@@ -42,6 +42,10 @@ int ode_driver(void f(double t, gsl_vector* y, gsl_vector* dy),
 	int flag = ODE_FAIL;
 	double err, tol;
 	// make sure that end-point is actually b
+	if(*a == b)
+	{
+		return ODE_SUCCESS;
+	}
 	if( *a + *h0 > b)
 	{
 		*h0 = b - *a;
@@ -55,7 +59,7 @@ int ode_driver(void f(double t, gsl_vector* y, gsl_vector* dy),
 		err = gsl_blas_dnrm2(W->err);
 		if (err < tol)
 		{
-			flag = ODE_SUCCES;
+			flag = ODE_SUCCESS;
 			*a += *h0;
 			gsl_vector_memcpy(ya,W->yh);
 		}
@@ -67,8 +71,8 @@ int ode_driver(void f(double t, gsl_vector* y, gsl_vector* dy),
 		{
 			*h0 *= 2;
 		}
-	} while (flag != ODE_SUCCES && flag < ODE_FAIL_UPPER);
-	if (flag != ODE_SUCCES)
+	} while (flag != ODE_SUCCESS && flag < ODE_FAIL_UPPER);
+	if (flag != ODE_SUCCESS)
 	{
 		fprintf(stderr,"ode_driver failed to achieve desired precision for t = %g after %d iterations.\n",*a,flag);
 	}

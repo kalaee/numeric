@@ -2,7 +2,7 @@
 #include <gsl/gsl_blas.h>
 #include <math.h>
 
-#define ODE_SUCCES	0
+#define ODE_SUCCESS	0
 #define ODE_FAIL	1
 #define ODE_FAIL_UPPER	1000
 

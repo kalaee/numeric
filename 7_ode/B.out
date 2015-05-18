@@ -1,0 +1,6 @@
+Trigonometric system, y'' = -y:
+RK5:	1242
+RKF45:	1440
+Bernoulli's ODE:
+RK5:	2178
+RKF45:	1818

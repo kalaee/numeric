@@ -1,0 +1,16 @@
+set terminal pdf
+set output 'B_sin.pdf'
+set xlabel '$t$'
+set ylabel '$y$'
+set key bottom left
+set title '$\frac{d^2y}{dt^2} = - y$, $y(0) = 0$, $\frac{dy(0)}{dt} = 1$, [RK5]'
+plot 'B.dat' index 0 using 1:2 w l lt 1 title '$y$', \
+'B.dat' index 0 using 1:3 w l lt 2 title '$dy/dt$', \
+'B.dat' index 1 using 1:2 title '$\sin x$', \
+'B.dat' index 1 using 1:3 title '$\cos x$'
+
+set output 'B_bernoulli.pdf'
+set title 'Bernoulli\'s ODE: $\frac{dy}{dt}=2\frac{y}{t}-t^2y^2$, $y(0.1) = 0.0125$, [RK5]'
+set key top right
+plot 'B.dat' index 2 using 1:2 w l lt 1 title 'y', \
+'B.dat' index 3 using 1:2 title '$\frac{5x^2}{x^5+3.99999}$'
