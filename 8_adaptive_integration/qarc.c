@@ -29,18 +29,29 @@ double qarc23(double f(double x), double a, double b, double y1, double y3, doub
 	}
 }
 
+// note that due to this algorithm using closed intervals, it cannot apply transformations
+// for integrals with infinities in the limits
 double qarc(double f(double), double a, double b, double acc, double eps, double * err)
 {
-	if (a == b)
+	if (a < b)
+	{
+		double y1 = f(a);
+		double y3 = f(b);
+		double Q = qarc23(f,a,b,y1,y3,acc,eps,err,0);
+		return Q;		
+	}
+	else if (b < a)
+	{
+		return -qarc(f,b,a,acc,eps,err);
+	}
+	else if (a == b)
 	{
 		*err = 0;
 		return 0;
 	}
 	else
 	{
-		double y1 = f(a);
-		double y3 = f(b);
-		double Q = qarc23(f,a,b,y1,y3,acc,eps,err,0);
-		return Q;
+		fprintf(stderr,"Something is wrong with the limits!\n");
+		return 0;
 	}
 }

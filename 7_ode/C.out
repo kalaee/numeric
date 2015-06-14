@@ -1,11 +1,14 @@
 int_0^{pi/4} log(1+tan(t))
 Numerical estimate (RKF45): 0.272198
-True value (Schaum's): log(2)*pi/8 = 	0.272198
+True value (Schaum's): log(2)*pi/8 =	0.272198
+Relative deviation: -9.90786e-09
 
 int_0^{pi/2} log(cos(t))
 Numerical estimate (RKF45): -1.08879
 True value (Schaum's): -log(2)*pi/2 = 	-1.08879
+Relative deviation: -1.66052e-08
 
 int_0^{1} sqrt(1-x^2)
 Numerical estimate (RKF45): 0.785398
 True value (Schaum's): pi/4 = 	0.785398
+Relative deviation: 2.48419e-08

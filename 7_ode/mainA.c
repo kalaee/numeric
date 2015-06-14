@@ -26,23 +26,20 @@ int main(void)
 {
 	// allocate workspace and system
 	ode_workspace* W = ode_workspace_alloc(2,ODE_RKF45_ALLOC);
-	int status;
-	double t = 0, h;
-	gsl_vector* y = gsl_vector_alloc(2);
-	gsl_vector_set(y,0,0);
-	gsl_vector_set(y,1,1);
+	int i, top;
+	double t;
+	gsl_matrix* y = gsl_matrix_alloc(1000,3);
+	gsl_vector* y0 = gsl_vector_alloc(2);
+	gsl_vector_set(y0,0,0);
+	gsl_vector_set(y0,1,1);
 
 	// solve ODE for sine, y(0) = 0, y'(0) = 1
-	h = 0.1;
-	fprintf(stdout,"%g\t%g\t%g\n",t,gsl_vector_get(y,0),gsl_vector_get(y,1));
-	while(t < 10)
+	top = ode_driver(f1,ODE_RKF45,0,10,0.1,y0,y,ACC,EPS,W);
+	for(i=0; i<=top; i++)
 	{
-		status = ode_driver(f1,ODE_RKF45,&t,10,&h,y,ACC,EPS,W);
-		if (status != ODE_SUCCESS)
-		{
-			break;
-		}
-		fprintf(stdout,"%g\t%g\t%g\n",t,gsl_vector_get(y,0),gsl_vector_get(y,1));
+		fprintf(stdout,"%g\t%g\t%g\n",gsl_matrix_get(y,i,0),
+										gsl_matrix_get(y,i,1),
+										gsl_matrix_get(y,i,2));
 	}
 	// output coordinates for known solution
 	fprintf(stdout,"\n\n");
@@ -53,19 +50,14 @@ int main(void)
 
 	// Solve Bernoulli ODE, y(0.1) = 0.0125, ignore second coordinate of y vector
 	fprintf(stdout,"\n\n");
-	gsl_vector_set(y,1,0);
-	gsl_vector_set(y,0,0.0125);
-	t = 0.1;
-	h = 0.1;
-	fprintf(stdout,"%g\t%g\n",t,gsl_vector_get(y,0));
-	while(t < 10)
+	gsl_vector_set(y0,1,0);
+	gsl_vector_set(y0,0,0.0125);
+	top = ode_driver(f2,ODE_RKF45,0.1,10,0.1,y0,y,ACC,EPS,W);
+	for(i=0; i<=top; i++)
 	{
-		status = ode_driver(f2,ODE_RKF45,&t,10,&h,y,ACC,EPS,W);
-		if (status != ODE_SUCCESS)
-		{
-			break;
-		}
-		fprintf(stdout,"%g\t%g\n",t,gsl_vector_get(y,0));
+		fprintf(stdout,"%g\t%g\t%g\n",gsl_matrix_get(y,i,0),
+										gsl_matrix_get(y,i,1),
+										gsl_matrix_get(y,i,2));
 	}
 	// output known coordinates for known solution
 	fprintf(stdout,"\n\n");
@@ -75,7 +67,8 @@ int main(void)
 	}
 
 	// free allocated memory
-	gsl_vector_free(y);
+	gsl_vector_free(y0);
+	gsl_matrix_free(y);
 	ode_workspace_free(W,ODE_RKF45_FREE);
 	return 0;
 }

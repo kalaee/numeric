@@ -12,6 +12,8 @@ typedef struct
 	gsl_vector* k5;
 } ode_rkf45_workspace;
 
+// allocate memory for RKF45 workspace
+// n is dimensions of ode system
 void* ODE_RKF45_ALLOC(int n)
 {
 	ode_rkf45_workspace* W = (ode_rkf45_workspace*) malloc(sizeof(ode_rkf45_workspace));
@@ -25,6 +27,7 @@ void* ODE_RKF45_ALLOC(int n)
 	return (void*) W;
 }
 
+// free memory for RKF45 workspace
 void ODE_RKF45_FREE(void* WORKSPACE)
 {
 	ode_rkf45_workspace* W = (ode_rkf45_workspace*) WORKSPACE;
@@ -38,6 +41,9 @@ void ODE_RKF45_FREE(void* WORKSPACE)
 	return;
 }
 
+// ODE stepper using RKF45 routine for taking step and estimating error
+// t is variable value, h step size, y initial condition, f ode function takes variable t and condition y and output derivative in dy
+// *err is pointer to where the estimated error is stored, WORKSPACE is pointer to ODE_RKF45_WORKSPACE typecasted as void*
 void ODE_RKF45(double t, double h, gsl_vector* y, void f(double t, gsl_vector* y, gsl_vector* dydt), gsl_vector* yh, gsl_vector* err, void* WORKSPACE)
 {
 	ode_rkf45_workspace* W = (ode_rkf45_workspace*) WORKSPACE;

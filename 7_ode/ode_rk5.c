@@ -14,6 +14,8 @@ typedef struct
 	gsl_vector* yh;
 } ode_rk5_workspace;
 
+// allocate memory for RK5 workspace
+// n is dimensions of system
 void* ODE_RK5_ALLOC(int n)
 {
 	ode_rk5_workspace* W = (ode_rk5_workspace*) malloc(sizeof(ode_rk5_workspace));
@@ -28,6 +30,7 @@ void* ODE_RK5_ALLOC(int n)
 	return (void*) W;
 }
 
+// free RK5 workspace
 void ODE_RK5_FREE(void* WORKSPACE)
 {
 	ode_rk5_workspace* W = (ode_rk5_workspace*) WORKSPACE;
@@ -42,6 +45,9 @@ void ODE_RK5_FREE(void* WORKSPACE)
 	return;
 }
 
+// ODE stepper using RK5 routine for taking step and estimating error
+// t is variable value, h step size, y initial condition, f ode function takes variable t and condition y and output derivative in dy
+// *err is pointer to where the estimated error is stored, WORKSPACE is pointer to ODE_RK5_WORKSPACE typecasted as void*
 void ODE_RK5(double t, double h, gsl_vector* y, void f(double t, gsl_vector* y, gsl_vector* dydt), gsl_vector* yh, gsl_vector* err, void* WORKSPACE)
 {
 	ode_rk5_workspace* W = (ode_rk5_workspace*) WORKSPACE;
