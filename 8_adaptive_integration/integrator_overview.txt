@@ -1,0 +1,6 @@
+The different integrators are
+
+QARC:	adaptive integration with recursive functions and closed interval evaluation
+QARO:	adaptive integration with recursive functions and open interval evaluation, allows infinite limits
+QASR:	adaptive integration with non-recursive functions and closed interval evalutation
+QASO:	adaptive integration with non-recursive functions and open interval evaluation, allows infinite limits

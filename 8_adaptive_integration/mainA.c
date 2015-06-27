@@ -4,37 +4,37 @@
 #include "qarc.h"
 #include "qaro.h"
 
+// allowed absolute and relative errors
 #define ACC	1e-12
 #define EPS	1e-12
-
 #define ACC1 1e-14
 #define EPS1 1e-13
+
+// int which counts number of calls to function
 int counter;
-// integrand f(x) = log(1+tan(t))
+
+// the different integrands
 double f1(double t)
 {
 	counter++;
 	return log(1+tan(t));
 }
-
 double f2(double t)
 {
 	counter++;
 	return 1/(2+cos(t));
 }
-
 double f3(double t)
 {
 	counter++;
 	return cos(2*t)/(1+0.5*cos(t)+0.25*0.25);
 }
-
 double f4(double t)
 {
 	counter++;
 	return 4*sqrt(1-pow(1-t,2));
 }
-
+// function 4 again, because of GSL
 double f4gsl(double t, void* param)
 {	
 	counter++;
@@ -44,6 +44,10 @@ double f4gsl(double t, void* param)
 int main(void)
 {
 	double err, Q, trueval;
+	// perform integration and output estimate
+	// together with error and calls to function
+
+	// f1
 	counter = 0;
 	trueval = log(2)*M_PI/8;
 	fprintf(stdout,"int_0^{pi/4} log(1+tan(t))\n");
@@ -60,6 +64,7 @@ int main(void)
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
 
+	// f2
 	counter = 0;
 	trueval = 2*M_PI/sqrt(3);
 	fprintf(stdout,"\n\nint_0^2*PI 1/(2+cos(t))\n");
@@ -76,7 +81,7 @@ int main(void)
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
 
-	
+	// f3
 	counter = 0;
 	trueval = M_PI*0.25*0.25/(1-0.25*0.25);
 	fprintf(stdout,"\n\nint_0^PI cos(t)/(1+0.5*cos(t)+0.25^2)\n");
@@ -93,7 +98,7 @@ int main(void)
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
 
-
+	// f4
 	counter = 0;
 	trueval = M_PI;
 	fprintf(stdout,"\n\nint_0^1 4*sqrt(1-(1-x)^2)\n");
@@ -110,7 +115,8 @@ int main(void)
 	fprintf(stdout,"QARO: %.16g\nError estimate: %g\n",Q,err);
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
-
+	
+	// f4 using GSL
 	counter = 0;
 	gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
 	gsl_function F;

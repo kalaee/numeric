@@ -5,55 +5,51 @@
 #include "qaso.h"
 #include "qaro.h"
 
+// allowed absolute and relative errors
 #define ACC	1e-12
 #define EPS	1e-12
-
 #define ACC1 1e-14
 #define EPS1 1e-13
+
+// count number of calls to function
 int counter;
-// integrand f(x) = log(1+tan(t))
+
+// integrands
 double f1(double t)
 {
 	counter++;
 	return log(1+tan(t));
 }
-
 double f2(double t)
 {
 	counter++;
 	return 1/(2+cos(t));
 }
-
 double f3(double t)
 {
 	counter++;
 	return cos(2*t)/(1+0.5*cos(t)+0.25*0.25);
 }
-
 double f4(double t)
 {
 	counter++;
 	return 4*sqrt(1-pow(1-t,2));
 }
-
 double f4gsl(double t, void* param)
 {	
 	counter++;
 	return 4*sqrt(1-pow(1-t,2));
 }
-
 double f5(double t)
 {
 	counter++;
 	return exp(-t);
 }
-
 double f6(double t)
 {
 	counter++;
 	return t*t*exp(-fabs(t));
 }
-
 double f7(double t)
 {
 	counter++;
@@ -63,12 +59,14 @@ double f7(double t)
 int main(void)
 {
 	double err, Q, trueval;
+
+	// integrate different functions and output data for different routines
 	counter = 0;
 	trueval = log(2)*M_PI/8;
 	fprintf(stdout,"|============================|\n");
 	fprintf(stdout,"|   Testing QASC and QASO    |\n");
 	fprintf(stdout,"|============================|\n");
-
+	// f1
 	fprintf(stdout,"\nint_0^{pi/4} log(1+tan(t))\n");
 	fprintf(stdout,"True value:\t%g\n",trueval);
 	Q = qasc(f1,0,M_PI/4,ACC,EPS,&err);
@@ -83,6 +81,7 @@ int main(void)
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
 
+	// f2
 	counter = 0;
 	trueval = 2*M_PI/sqrt(3);
 	fprintf(stdout,"\n\nint_0^2*PI 1/(2+cos(t))\n");
@@ -99,6 +98,7 @@ int main(void)
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
 	
+	// f3
 	counter = 0;
 	trueval = M_PI*0.25*0.25/(1-0.25*0.25);
 	fprintf(stdout,"\n\nint_0^PI cos(t)/(1+0.5*cos(t)+0.25^2)\n");
@@ -115,7 +115,7 @@ int main(void)
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
 
-
+	// f4
 	counter = 0;
 	trueval = M_PI;
 	fprintf(stdout,"\n\nint_0^1 4*sqrt(1-(1-x)^2)\n");
@@ -132,7 +132,7 @@ int main(void)
 	fprintf(stdout,"QASO: %.16g\nError estimate: %g\n",Q,err);
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
-
+	// f4, GSL
 	counter = 0;
 	gsl_integration_workspace * w = gsl_integration_workspace_alloc (1000);
 	gsl_function F;
@@ -143,10 +143,12 @@ int main(void)
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
 
+	// test implementation of infinite integrals
 	fprintf(stdout,"\n|============================|\n");
 	fprintf(stdout,"|   Limits with infinities   |\n");
 	fprintf(stdout,"|============================|\n");
 
+	// f5
 	counter = 0;
 	trueval = 1;
 	fprintf(stdout,"\nint_0^INF exp(t)\n");
@@ -156,7 +158,8 @@ int main(void)
 	fprintf(stdout,"QARO estimate: %g\nError estimate: %g\n",Q,err);
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
-
+	
+	// f6
 	counter = 0;
 	trueval = -2;
 	fprintf(stdout,"\n\nint_0^-INF t^2*exp(t)\n");
@@ -167,6 +170,7 @@ int main(void)
 	fprintf(stdout,"Actual error:\t%g\n",Q -trueval);
 	fprintf(stdout,"Counts:\t%d\n",counter);
 
+	// f7
 	counter = 0;
 	trueval = 3.708149354602743836867700694390520092435197647043533811171;
 	fprintf(stdout,"\n\nint_-INF^INF 1/sqrt(1+t^4)\n");

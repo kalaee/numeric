@@ -1,0 +1,9 @@
+True value:
+int_0^{2*pi} cos(x)*exp(1+sin(x)) = 0
+
+Routine	Estimate	Calls
+RKF45:	7.84325e-09	4002
+QARO:	-3.48787e-14	8
+QARC:	-2.96469e-14	5
+QASO:	-3.48787e-14	8
+QASC:	-2.96469e-14	5

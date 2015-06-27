@@ -1,0 +1,60 @@
+int_0^{pi/4} log(1+tan(t))
+True value:	0.272198
+============================
+QARC: 0.272198	
+Error estimate: 5.55112e-17
+Actual error:	-5.55112e-17
+Counts:	3
+----------------------------
+QARO: 0.272198
+Error estimate: 0
+Actual error:	0
+Counts:	4
+
+
+int_0^2*PI 1/(2+cos(t))
+True value:	3.6276
+============================
+QARC: 3.6276	
+Error estimate: 1.67712e-10
+Actual error:	2.69025e-11
+Counts:	296369
+----------------------------
+QARO: 3.6276
+Error estimate: 1.44338e-10
+Actual error:	0
+Counts:	301424
+
+
+int_0^PI cos(t)/(1+0.5*cos(t)+0.25^2)
+True value:	0.20944
+============================
+QARC: 0.20944	
+Error estimate: 1.76472e-10
+Actual error:	-3.52565e-12
+Counts:	347699
+----------------------------
+QARO: 0.20944
+Error estimate: 1.38506e-10
+Actual error:	-2.498e-16
+Counts:	368360
+
+
+int_0^1 4*sqrt(1-(1-x)^2)
+True value:	3.141592653589793
+Tolerance: ACC = 1e-14, EPS = 1e-13
+============================
+QARC: 3.141592653588531	
+Error estimate: 3.78644e-12
+Actual error:	-1.26166e-12
+Counts:	1156215
+----------------------------
+QARO: 3.141592653589793
+Error estimate: 2.78158e-12
+Actual error:	0
+Counts:	1282336
+----------------------------
+GSL QAG: 3.141592653589794
+Error estimate: 2.48326e-13
+Actual error:	4.44089e-16
+Counts:	2501

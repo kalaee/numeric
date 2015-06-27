@@ -2,43 +2,62 @@
 #include <math.h>
 #include <stdio.h>
 #include "../libs/ode_integrate.h"
+#include "qaro.h"
+#include "qarc.h"
+#include "qasc.h"
+#include "qaso.h"
 
 #define ACC	1e-9
 #define EPS	1e-9
-
-// integrand f(x) = log(1+tan(t))
-void f1(double t, gsl_vector* y0, gsl_vector* dydt)
+int counter;
+// integrand f(x) = cos(x)*exp(1+sin(x))
+void f1_ode(double t, gsl_vector* y0, gsl_vector* dydt)
 {
-	gsl_vector_set(dydt,0,log(1+tan(t)));
+	gsl_vector_set(dydt,0,cos(t)*exp(1+sin(t)));
+	counter++;
+	return;
 }
 
-// integrand f(x) = log(cos(x))
-void f2(double t, gsl_vector* y0, gsl_vector* dydt)
+double f1_adapt(double t)
 {
-	gsl_vector_set(dydt,0,log(cos(t)));
+	counter++;
+	return cos(t)*exp(1+sin(t));
 }
-
-// integrand f(x) = sqrt(1-x^2)
-void f3(double t, gsl_vector* y0, gsl_vector* dydt)
-{
-	gsl_vector_set(dydt,0,sqrt(1-t*t));
-}
-
 int main(void)
 {
+	counter = 0;
+	double estimate, err;
 	ode_workspace* W = ode_workspace_alloc(1,ODE_RKF45_ALLOC);
 
-	fprintf(stdout,"int_0^{pi/4} log(1+tan(t))\n");
-	fprintf(stdout,"Numerical estimate (RKF45): %g\n",ode_integrate(f1,0,M_PI/4.,ACC,EPS,W));
-	fprintf(stdout,"True value (Schaum's): log(2)*pi/8 = \t%g\n",M_PI/8.*log(2));
-
-	fprintf(stdout,"\nint_0^{pi/2} log(cos(t))\n");
-	fprintf(stdout,"Numerical estimate (RKF45): %g\n",ode_integrate(f2,0,M_PI/2.,ACC,EPS,W));
-	fprintf(stdout,"True value (Schaum's): -log(2)*pi/2 = \t%g\n",-M_PI/2.*log(2));
-
-	fprintf(stdout,"\nint_0^{1} sqrt(1-x^2)\n");
-	fprintf(stdout,"Numerical estimate (RKF45): %g\n",ode_integrate(f3,0,1,ACC,EPS,W));
-	fprintf(stdout,"True value (Schaum's): pi/4 = \t%g\n",M_PI/4);
+	// integrate function f1
+	fprintf(stdout,"True value:\n");
+	fprintf(stdout,"int_0^{2*pi} cos(x)*exp(1+sin(x)) = 0\n\n");
+	fprintf(stdout,"Routine\tEstimate\tCalls\n");
+	
+	// RKF45, an ODE routine
+	counter = 0;
+	estimate = ode_integrate(f1_ode,0,10*M_PI,ACC,EPS,W);
+	fprintf(stdout,"RKF45:\t%g\t%d\n",estimate,counter);
+	
+	// QARO
+	counter = 0;
+	estimate = qaro(f1_adapt,0,10*M_PI,ACC,EPS,&err);
+	fprintf(stdout,"QARO:\t%g\t%d\n",estimate,counter);
+	
+	// QARC
+	counter = 0;
+	estimate = qarc(f1_adapt,0,10*M_PI,ACC,EPS,&err);
+	fprintf(stdout,"QARC:\t%g\t%d\n",estimate,counter);
+	
+	// QASO
+	counter = 0;
+	estimate = qaso(f1_adapt,0,10*M_PI,ACC,EPS,&err);
+	fprintf(stdout,"QASO:\t%g\t%d\n",estimate,counter);
+	
+	// QASC
+	counter = 0;
+	estimate = qasc(f1_adapt,0,10*M_PI,ACC,EPS,&err);
+	fprintf(stdout,"QASC:\t%g\t%d\n",estimate,counter);
 
 	ode_workspace_free(W,ODE_RKF45_FREE);
 	return 0;
