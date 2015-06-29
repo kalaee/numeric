@@ -1,6 +1,6 @@
 set terminal pdf
 set output 'A.pdf'
-set title 'Testing power law of error in Monte Carlo integration'
+set title 'Error in estimate of $\int_0^1\int_0^{2\pi} \theta\cos r \sin\theta d\theta dr$ using Monte Carlo'
 set xlabel 'N'
 set ylabel 'Actual error'
 set key bottom left
