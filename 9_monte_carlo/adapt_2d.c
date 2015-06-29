@@ -17,10 +17,10 @@ double adapt24_inner(double f(double x, double y), double x, double a, double b,
 	}
 	// make integral estimate of fourth and second order
 	double h = b-a;
-	double y1 = f(x,a+h/6);
-	double y4 = f(x,a+h*5/6);
-	double Q = h/6*(2*y1+y2+y3+2*y4);
-	double q = h/2*(y1+y4);
+	double y1 = f(x,a+h/6.);
+	double y4 = f(x,a+h*5./6.);
+	double Q = h/6.*(2.*y1+y2+y3+2.*y4);
+	double q = h/2.*(y1+y4);
 	*err = fabs(Q-q);
 	// if error sufficiently small: return integral value and error estimate
 	if ( *err < acc + eps*fabs(Q) )
@@ -55,17 +55,17 @@ double adapt24_outer(double f(double x, double y), double ax, double ay, double 
 	double dummy;	// dummy for error-pointer to adapt24_inner below
 	double hx = bx-ax;	// width of interval in x coordinate
 	double hy = by-ay;	// width in y-coordinate
-	double acc_inner = acc/2;	// reduce absolute tolerance by sqrt(4) when passing to adapt24_inner
-	double x1 = ax+hx/6;	// coordinate to evaluate y?_x1_inner below
-	double x4 = ax+hx*5/6;	// coordinate to evaluate y?_x4_inner below
-	double y2_x1_inner = f(x1,ay+hy*2/6);
-	double y3_x1_inner = f(x1,ay+hy*4/6);
-	double y2_x4_inner = f(x4,ay+hy*2/6);
-	double y3_x4_inner = f(x4,ay+hy*4/6);
+	double acc_inner = acc/2.;	// reduce absolute tolerance by sqrt(4) when passing to adapt24_inner
+	double x1 = ax+hx/6.;	// coordinate to evaluate y?_x1_inner below
+	double x4 = ax+hx*5./6.;	// coordinate to evaluate y?_x4_inner below
+	double y2_x1_inner = f(x1,ay+hy*2./6.);
+	double y3_x1_inner = f(x1,ay+hy*4./6.);
+	double y2_x4_inner = f(x4,ay+hy*2./6.);
+	double y3_x4_inner = f(x4,ay+hy*4./6.);
 	double y1 = adapt24_inner(f,x1,ay,by,y2_x1_inner,y3_x1_inner,acc_inner,eps,&dummy,0);
 	double y4 = adapt24_inner(f,x4,ay,by,y2_x4_inner,y3_x4_inner,acc_inner,eps,&dummy,0);
-	double Q = hx/6*(2*y1+y2+y3+2*y4); // integral estimate to fourth order
-	double q = hx/2*(y1+y4);	// integral estimate to second order
+	double Q = hx/6.*(2.*y1+y2+y3+2*y4); // integral estimate to fourth order
+	double q = hx/2.*(y1+y4);	// integral estimate to second order
 	*err = fabs(Q-q);
 	// if error sufficiently small: return integral value and error estimate
 	if ( *err < acc + eps*fabs(Q) )
@@ -90,13 +90,13 @@ double adapt_2d(double f(double x, double y), double ax, double ay, double bx, d
 	double dummy;
 	double hx = bx-ax;
 	double hy = by-ay;
-	double acc_inner = acc/2;
-	double x2 = ax+hx*2/6;
-	double x3 = ax+hx*4/6;
-	double y2_x2_inner = f(x2,ay+hy*2/6);
-	double y3_x2_inner = f(x2,ay+hy*4/6);
-	double y2_x3_inner = f(x3,ay+hy*2/6);
-	double y3_x3_inner = f(x3,ay+hy*4/6);
+	double acc_inner = acc/2.;
+	double x2 = ax+hx*2./.6;
+	double x3 = ax+hx*4./6.;
+	double y2_x2_inner = f(x2,ay+hy*2./6.);
+	double y3_x2_inner = f(x2,ay+hy*4./6.);
+	double y2_x3_inner = f(x3,ay+hy*2./6.);
+	double y3_x3_inner = f(x3,ay+hy*4./6.);
 	double y2 = adapt24_inner(f,x2,ay,by,y2_x2_inner,y3_x2_inner,acc_inner,eps,&dummy,0);
 	double y3 = adapt24_inner(f,x3,ay,by,y2_x3_inner,y3_x3_inner,acc_inner,eps,&dummy,0);
 	// integrate

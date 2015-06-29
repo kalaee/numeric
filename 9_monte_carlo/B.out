@@ -1,0 +1,19 @@
+Tolerances
+ACC:	0.001
+EPS:	0.001
+
+Integral: int sin(x)*y*exp(-x*y), x from 0 to pi, y from 0 to 2*pi
+Exact value (Mathematica):	1.92405
+
+Adaptive integrator w/ open intervals in 2D
+Estim:	1.92431
+Estim. err:	0.00090126
+Actual err:	0.000256458
+Calls to function:	9640
+
+Plain Monte Carlo w/ tolerance
+Estim:	1.92537
+Estim. err:	0.00292537
+Actual err:	0.00132068
+Calls to function:	622988
+

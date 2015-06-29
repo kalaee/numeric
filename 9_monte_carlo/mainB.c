@@ -31,11 +31,14 @@ int main(void)
 	r = gsl_rng_alloc(T);
 	
 	double exact, estim, err, a[2], b[2];
-	exact = 1.92405;
+	exact = 1.924052409955306;
 	a[0] = 0; a[1] = 0;
 	b[0] = M_PI; b[1] = 2*M_PI;
 
 	fprintf(stdout,"Tolerances\nACC:\t%g\nEPS:\t%g\n\n",ACC,EPS);
+
+	fprintf(stdout,"Integral: int sin(x)*y*exp(-x*y), x from 0 to pi, y from 0 to 2*pi\n");
+	fprintf(stdout,"Exact value (Mathematica):\t%g\n\n",exact);
 
 	fprintf(stdout,"Adaptive integrator w/ open intervals in 2D\n");
 	counter = 0;
