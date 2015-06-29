@@ -1,9 +1,0 @@
-Solve Ax = b for x, where b = Ay, using QR decomp
-Evaluating the deviation between x and y:
-	|x-y| =	3.63258e-11
-
-Compute the inverse matrix Binv of B. The entrywise norm of B*Binv - I is
-	|B*Binv - I| =	1.99494e-11
-
-Compare the algorithm for computation of the absolute value of the determinant
-	|det(A)|/|det(A)_gsl| - 1 =	-5.69544e-14

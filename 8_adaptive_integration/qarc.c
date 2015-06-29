@@ -1,6 +1,8 @@
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 // Quadratic Adaptive integral using Recursive Closed intervals
 // and trapezoid evaluations of order 3 with 2 for error estimate
 
@@ -18,7 +20,7 @@ double qarc23(double f(double x), double a, double b, double y1, double y3, doub
 	if (nrecur > 100000)
 	{
 		fprintf(stderr,"Too many subdivisions!\n");
-		return 0;
+		exit(EXIT_FAILURE);
 	}
 	// make estimate of third and second order
 	double h = b-a;
@@ -39,7 +41,7 @@ double qarc23(double f(double x), double a, double b, double y1, double y3, doub
 		double err1, err2;
 		double Q1 = qarc23(f,a,a+h/2,y1,y2,acc,eps,&err1,nrecur+1);
 		double Q2 = qarc23(f,a+h/2,b,y2,y3,acc,eps,&err2,nrecur+1);
-		*err = err1 + err2;
+		*err = sqrt(err1*err1 + err2*err2);
 		return Q1 + Q2;
 	}
 }
@@ -75,6 +77,6 @@ double qarc(double f(double), double a, double b, double acc, double eps, double
 	else
 	{
 		fprintf(stderr,"Something is wrong with the limits!\n");
-		return 0;
+		exit(EXIT_FAILURE);
 	}
 }

@@ -68,7 +68,7 @@ double qasc23(double f(double t), double a, double b, double acc, double eps, do
 			if (diff < now->acc + eps*fabs(Q))
 			{
 				I += Q;
-				*err += diff;
+				*err += diff*diff;
 				done = now;
 				now = (node*) done->next;
 				free(done);
@@ -108,9 +108,11 @@ double qasc23(double f(double t), double a, double b, double acc, double eps, do
 				free(done);
 			}
 			fprintf(stderr,"done!\n");
+			exit(EXIT_FAILURE);
 		}
 	// terminate when null pointer is reached
 	} while ( now != NULL);
+	*err = sqrt(*err);
 	return I;
 }
 
@@ -143,6 +145,6 @@ double qasc(double f(double), double a, double b, double acc, double eps, double
 	else
 	{
 		fprintf(stderr,"Something is wrong with the limits!\n");
-		return 0;
+		exit(EXIT_FAILURE);
 	}
 }

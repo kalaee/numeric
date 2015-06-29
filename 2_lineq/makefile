@@ -5,42 +5,43 @@ LDLIBS += `gsl-config --libs`
 
 # Overall
 
-all: A B C time.out
+all: A B C
 
 clean:
-	rm -f *.o *.out mainA mainB mainC
+	rm -f *.o *.out *.pdf mainA mainB mainC mainB_givens mainB_qr
 
 # Object files
 qr.o: qr.c backsub.h
 givens.o: givens.c backsub.h
-cholesky.o: cholesky.c backsub.h
-backsub.o: backsub.c
+cholesky.o: cholesky.c cholesky.h
+backsub.o: backsub.c backsub.h
 
 # Task A
 A: mainA
 	./mainA > A.out
 
-mainA: mainA.c qr.o qr.h backsub.o
+mainA: mainA.c qr.o backsub.o
 
 # Task B
-B: mainB
+B: mainB B.pdf
 	./mainB > B.out
-
-mainB: mainB.c givens.o givens.h backsub.o
-
-time.out: mainA mainB
-	echo 'Comparison of runtime for algorithms in A and B' > time.out
-	echo 'Both solve exactly the same problems and' >> time.out
-	echo 'reserve the same amount of memory.' >> time.out
-	echo 'Note that they both call the same GSL LU decomp' >> time.out
-	echo 'to evaluate their results.' >> time.out
-	echo 'QR with Gram-Schmidt orthogonalisation:' >> time.out
-	\time -f "%U sec" -ao time.out ./mainA > /dev/null
-	echo 'QR with Givens rotations' >> time.out
-	\time -f "%U sec" -ao time.out ./mainB > /dev/null
+mainB: mainB.c givens.o backsub.o
+mainB_givens: mainB_givens.c givens.o backsub.o
+mainB_qr: mainB_qr.c qr.o backsub.o
+time.out: mainB_givens mainB_qr
+	echo '# Givens qr' > $@
+	for N in `seq 100 10 1000`; do \
+	echo "N=$$N"; \time -ao $@ -f "$$N %U" ./mainB_givens $$N; \
+	done
+	echo '\n\n# Gram-Schmidt qr' >> $@
+	for N in `seq 100 10 1000`; do \
+	echo "N=$$N"; \time -ao $@ -f "$$N %U" ./mainB_qr $$N; \
+	done
+B.pdf: B.ppl time.out
+	pyxplot B.ppl
 
 # Task C
 C: mainC
 	./mainC > C.out
 
-mainC: mainC.c cholesky.o cholesky.h backsub.o
+mainC: mainC.c cholesky.o backsub.o

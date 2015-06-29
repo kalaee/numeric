@@ -1,0 +1,11 @@
+set terminal pdf
+set output 'A.pdf'
+set title 'Testing power law of error in Monte Carlo integration'
+set xlabel 'N'
+set ylabel 'Actual error'
+set key bottom left
+set log
+f(x) = b*x**a
+fit f(x) 'A.dat' using 1:2 via a,b
+plot 'A.dat' using 1:2 title 'Error', \
+f(x)  with lines title '$f(x) = 2.661\cdot N^{-0.4967}$'

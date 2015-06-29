@@ -20,12 +20,12 @@ int_0^2*PI 1/(2+cos(t))
 True value:	3.6276
 ============================
 QASC: 3.6276	
-Error estimate: 1.67712e-10
+Error estimate: 4.77536e-13
 Actual error:	2.69029e-11
 Counts:	296369
 ----------------------------
 QASO: 3.6276
-Error estimate: 1.44338e-10
+Error estimate: 5.72969e-13
 Actual error:	0
 Counts:	301424
 
@@ -34,12 +34,12 @@ int_0^PI cos(t)/(1+0.5*cos(t)+0.25^2)
 True value:	0.20944
 ============================
 QASC: 0.20944	
-Error estimate: 1.76472e-10
+Error estimate: 5.15849e-13
 Actual error:	-3.52568e-12
 Counts:	347699
 ----------------------------
 QASO: 0.20944
-Error estimate: 1.38506e-10
+Error estimate: 5.51839e-13
 Actual error:	-1.94289e-16
 Counts:	368360
 
@@ -49,12 +49,12 @@ True value:	3.141592653589793
 Tolerance: ACC = 1e-14, EPS = 1e-13
 ============================
 QASC: 3.141592653588531	
-Error estimate: 3.78644e-12
+Error estimate: 6.56206e-15
 Actual error:	-1.2621e-12
 Counts:	1156215
 ----------------------------
 QASO: 3.141592653589793
-Error estimate: 2.78158e-12
+Error estimate: 6.78703e-15
 Actual error:	0
 Counts:	1282336
 ----------------------------
@@ -71,7 +71,7 @@ int_0^INF exp(t)
 True value:	1
 ============================
 QARO estimate: 1
-Error estimate: 7.86049e-11
+Error estimate: 4.95454e-13
 Actual error:	-3.45279e-14
 Counts:	152652
 
@@ -80,7 +80,7 @@ int_0^-INF t^2*exp(t)
 True value:	-2
 ============================
 QASO estimate: -2
-Error estimate: 1.27932e-10
+Error estimate: 5.0726e-13
 Actual error:	2.88658e-15
 Counts:	412632
 
@@ -89,6 +89,6 @@ int_-INF^INF 1/sqrt(1+t^4)
 True value:	3.708149354602744
 ============================
 QARO estimate: 3.70815
-Error estimate: 9.38341e-11
+Error estimate: 4.60436e-13
 Actual error:	-4.44089e-16
 Counts:	549216

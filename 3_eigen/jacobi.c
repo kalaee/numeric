@@ -18,18 +18,22 @@ int jacobi_cyclic(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 	int flag, rot, p, q, i, n = A->size1;
 	double app, aqq, apq, phi, s, c, app1, aqq1;
 	double aip, aiq, api, aqi, vip, viq;
+	// store diagonal values
 	for(i=0; i<n; i++)
 	{
 		gsl_vector_set(eig,i,gsl_matrix_get(A,i,i));
 	}
 	gsl_matrix_set_identity(V);
 	rot = 0;
+	// perform jacobi rotation
 	do {
 		flag = 0;
+		// consider each element in order
 		for(p=0; p<n; p++)
 		{
 			for(q=p+1; q<n; q++)
 			{
+				// find angle to rotate A(p,q) to zero
 				app = gsl_vector_get(eig,p);
 				aqq = gsl_vector_get(eig,q);
 				apq = gsl_matrix_get(A,p,q);
@@ -38,12 +42,15 @@ int jacobi_cyclic(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 				c = cos(phi);
 				app1 = c*c*app-2*s*c*apq+s*s*aqq;
 				aqq1 = s*s*app+2*s*c*apq+c*c*aqq;
+				// if rotation affected the entries, apply rotation to whole matrix
+				// change flag and increment rot by one
 				if (app1 != app || aqq1 != aqq)
 				{
 					flag = 1; rot++;
 					gsl_vector_set(eig,p,app1);
 					gsl_vector_set(eig,q,aqq1);
 					gsl_matrix_set(A,p,q,0);
+					// first three performs rotation
 					for(i=0; i<p; i++)
 					{
 						aip = gsl_matrix_get(A,i,p);
@@ -65,6 +72,7 @@ int jacobi_cyclic(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 						gsl_matrix_set(A,p,i,c*api - s*aqi);
 						gsl_matrix_set(A,q,i,c*aqi + s*api);
 					}
+					// calculate eigenvectors
 					for(i=0; i<n; i++)
 					{
 						vip = gsl_matrix_get(V,i,p);
@@ -75,6 +83,7 @@ int jacobi_cyclic(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 				}
 			}
 		}	
+	// continure until no entries can be reduced anymore
 	} while (flag != 0);
 
 	return rot;
@@ -96,12 +105,14 @@ int jacobi_row(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 	int flag, rot, p, q, i, n = A->size1;
 	double app, aqq, apq, phi, s, c, app1, aqq1;
 	double aip, aiq, api, aqi, vip, viq;
+	// store diagonal entries
 	for(i=0; i<n; i++)
 	{
 		gsl_vector_set(eig,i,gsl_matrix_get(A,i,i));
 	}
 	gsl_matrix_set_identity(V);
 	rot = 0;
+	// reduce completely one row at a time
 	for(p=0; p<n; p++)
 	{
 		do
@@ -109,20 +120,24 @@ int jacobi_row(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 			flag = 0;
 			for(q=p+1; q<n; q++)
 			{
+				// estimate rotation angle
 				app = gsl_vector_get(eig,p);
 				aqq = gsl_vector_get(eig,q);
 				apq = gsl_matrix_get(A,p,q);
-				phi = (atan2(2*apq,aqq-app)+SORT*PI)/2;
+				phi = 0.5*(atan2(2*apq,aqq-app)+SORT*PI);
 				s = sin(phi);
 				c = cos(phi);
 				app1 = c*c*app-2*s*c*apq+s*s*aqq;
 				aqq1 = s*s*app+2*s*c*apq+c*c*aqq;
-				if (app1 != app)
+				// if rotation does anything, apply
+				// change flag and increment rot
+				if (app1 != app || aqq1 != aqq)
 				{
 					flag = 1; rot++;
 					gsl_vector_set(eig,p,app1);
 					gsl_vector_set(eig,q,aqq1);
 					gsl_matrix_set(A,p,q,0);
+					// first three loops apply rotation
 					for(i=0; i<p; i++)
 					{
 						aip = gsl_matrix_get(A,i,p);
@@ -144,6 +159,7 @@ int jacobi_row(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 						gsl_matrix_set(A,p,i,c*api - s*aqi);
 						gsl_matrix_set(A,q,i,c*aqi + s*api);
 					}
+					// last one calculates eigenvectors
 					for(i=0; i<n; i++)
 					{
 						vip = gsl_matrix_get(V,i,p);
@@ -153,6 +169,7 @@ int jacobi_row(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 					}
 				}
 			}
+		// continue until row completely reduced
 		} while (flag != 0);
 	}
 
@@ -175,21 +192,23 @@ int jacobi_max_row(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 	int flag, rot, p, q, i, n = A->size1;
 	double app, aqq, apq, phi, s, c, app1, aqq1;
 	double aip, aiq, api, aqi, vip, viq, max;
+	// store diagonal values
 	for(i=0; i<n; i++)
 	{
 		gsl_vector_set(eig,i,gsl_matrix_get(A,i,i));
 	}
-
 	gsl_matrix_set_identity(V);
 
 	rot = 0;
+	// consider each row until completely reduced
 	for(p=0; p<n-1; p++)
 	{
 		do
 		{
+			// find the largest element of the row
 			flag = 0;
 			q = p+1;
-			max = gsl_matrix_get(A,p,q);
+			max = fabs(gsl_matrix_get(A,p,q));
 			for(i=p+2; i<n; i++)
 			{
 				if(max < fabs(gsl_matrix_get(A,p,i)))
@@ -198,50 +217,51 @@ int jacobi_max_row(gsl_matrix* A, gsl_vector* eig, gsl_matrix* V, int SORT)
 					q = i;
 				}
 			}
-			if(q < n)
+			// estimate neccesary rotation angle
+			app = gsl_vector_get(eig,p);
+			aqq = gsl_vector_get(eig,q);
+			apq = gsl_matrix_get(A,p,q);
+			phi = 0.5*(atan2(2*apq,aqq-app)+SORT*PI);
+			s = sin(phi);
+			c = cos(phi);
+			app1 = c*c*app-2*s*c*apq+s*s*aqq;
+			aqq1 = s*s*app+2*s*c*apq+c*c*aqq;
+			// if rotation changes values, apply
+			if (app1 != app || aqq1 != aqq)
 			{
-				app = gsl_vector_get(eig,p);
-				aqq = gsl_vector_get(eig,q);
-				apq = gsl_matrix_get(A,p,q);
-				phi = (atan2(2*apq,aqq-app)+SORT*PI)/2;
-				s = sin(phi);
-				c = cos(phi);
-				app1 = c*c*app-2*s*c*apq+s*s*aqq;
-				aqq1 = s*s*app+2*s*c*apq+c*c*aqq;
-				if (app1 != app)
+				flag = 1; rot++;
+				gsl_vector_set(eig,p,app1);
+				gsl_vector_set(eig,q,aqq1);
+				gsl_matrix_set(A,p,q,0);
+				// first three loops rotates matrix
+				for(i=0; i<p; i++)
 				{
-					flag = 1; rot++;
-					gsl_vector_set(eig,p,app1);
-					gsl_vector_set(eig,q,aqq1);
-					gsl_matrix_set(A,p,q,0);
-					for(i=0; i<p; i++)
-					{
-						aip = gsl_matrix_get(A,i,p);
-						aiq = gsl_matrix_get(A,i,q);
-						gsl_matrix_set(A,i,p,c*aip - s*aiq);
-						gsl_matrix_set(A,i,q,c*aiq + s*aip);
-					}
-					for(i=p+1; i<q; i++)
-					{
-						api = gsl_matrix_get(A,p,i);
-						aiq = gsl_matrix_get(A,i,q);
-						gsl_matrix_set(A,p,i,c*api - s*aiq);
-						gsl_matrix_set(A,i,q,c*aiq + s*api);
-					}
-					for(i=q+1; i<n; i++)
-					{
-						api = gsl_matrix_get(A,p,i);
-						aqi = gsl_matrix_get(A,q,i);
-						gsl_matrix_set(A,p,i,c*api - s*aqi);
-						gsl_matrix_set(A,q,i,c*aqi + s*api);
-					}
-					for(i=0; i<n; i++)
-					{
-						vip = gsl_matrix_get(V,i,p);
-						viq = gsl_matrix_get(V,i,q);
-						gsl_matrix_set(V,i,p,c*vip - s*viq);
-						gsl_matrix_set(V,i,q,c*viq + s*vip);
-					}
+					aip = gsl_matrix_get(A,i,p);
+					aiq = gsl_matrix_get(A,i,q);
+					gsl_matrix_set(A,i,p,c*aip - s*aiq);
+					gsl_matrix_set(A,i,q,c*aiq + s*aip);
+				}
+				for(i=p+1; i<q; i++)
+				{
+					api = gsl_matrix_get(A,p,i);
+					aiq = gsl_matrix_get(A,i,q);
+					gsl_matrix_set(A,p,i,c*api - s*aiq);
+					gsl_matrix_set(A,i,q,c*aiq + s*api);
+				}
+				for(i=q+1; i<n; i++)
+				{
+					api = gsl_matrix_get(A,p,i);
+					aqi = gsl_matrix_get(A,q,i);
+					gsl_matrix_set(A,p,i,c*api - s*aqi);
+					gsl_matrix_set(A,q,i,c*aqi + s*api);
+				}
+				// last loop estimates eigenvectors
+				for(i=0; i<n; i++)
+				{
+					vip = gsl_matrix_get(V,i,p);
+					viq = gsl_matrix_get(V,i,q);
+					gsl_matrix_set(V,i,p,c*vip - s*viq);
+					gsl_matrix_set(V,i,q,c*viq + s*vip);
 				}
 			}
 		} while (flag != 0);

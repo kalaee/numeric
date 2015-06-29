@@ -1,0 +1,83 @@
+----Volume of sphere----
+Exact volume:	4.18879
+
+N = 10
+Estimate:	7.18312
+Estim. error:	2.20947
+True error:	2.99433
+
+N = 100
+Estimate:	3.96222
+Estim. error:	0.471244
+True error:	-0.226569
+
+N = 1000
+Estimate:	4.15877
+Estim. error:	0.148056
+True error:	-0.0300246
+
+N = 10000
+Estimate:	4.24981
+Estim. error:	0.0469098
+True error:	0.0610191
+
+N = 100000
+Estimate:	4.16654
+Estim. error:	0.01458
+True error:	-0.0222524
+
+N = 1000000
+Estimate:	4.18801
+Estim. error:	0.00462502
+True error:	-0.000780378
+
+N = 10000000
+Estimate:	4.18957
+Estim. error:	0.00146392
+True error:	0.00077876
+
+N = 100000000
+Estimate:	4.18911
+Estim. error:	0.0004628
+True error:	0.000314844
+
+
+----Integral of cos(r) over unit circle----
+Exact value:	0
+
+N = 10
+Estimate:	-0.847084
+Estim. error:	0.419219
+N = 100
+Estimate:	-0.27338
+Estim. error:	0.189346
+N = 1000
+Estimate:	0.0931242
+Estim. error:	0.057028
+N = 10000
+Estimate:	-0.00486717
+Estim. error:	0.0186744
+N = 100000
+Estimate:	0.00321652
+Estim. error:	0.00590809
+N = 1000000
+Estimate:	-0.00122526
+Estim. error:	0.001865
+N = 10000000
+Estimate:	0.00129676
+Estim. error:	0.000589908
+N = 100000000
+Estimate:	-4.31936e-07
+Estim. error:	0.000186553
+N = 1000000000
+Estimate:	5.18946e-05
+Estim. error:	5.89897e-05
+
+----Assignment----
+True results:	1.3932
+
+N = 1000000000
+Estimate:	1.39192
+Estim. error:	0.017075
+True error:	-0.00128036
+

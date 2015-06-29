@@ -4,8 +4,9 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_blas.h>
-
 #include "jacobi.h"
+
+#define RND ((double) rand()/RAND_MAX)
 
 int main(int argc, char * argv[])
 {
@@ -19,10 +20,11 @@ int main(int argc, char * argv[])
 	// We construct matrix A and make it symmetric
 	for (i = 0; i < SIZE; i++)
 	{
-		gsl_matrix_set(A,i,i,sin(i)+cos(i*i));
+		gsl_matrix_set(A, i, i, RND);
 		for (j = i+1; j < SIZE; j++)
 		{
-			gsl_matrix_set(A, i, j, sin(i) + cos(j*i));
+			gsl_matrix_set(A, i, j, RND);
+			gsl_matrix_set(A,j,i,gsl_matrix_get(A,i,j));
 		}
 	}
 

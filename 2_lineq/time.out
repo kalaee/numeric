@@ -1,9 +1,0 @@
-Comparison of runtime for algorithms in A and B
-Both solve exactly the same problems and
-reserve the same amount of memory.
-Note that they both call the same GSL LU decomp
-to evaluate their results.
-QR with Gram-Schmidt orthogonalisation:
-0.27 sec
-QR with Givens rotations
-2.36 sec

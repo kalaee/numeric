@@ -10,26 +10,23 @@
 void givens_qr_dec(gsl_matrix* A)
 {
 	int i,j,k;
-	double t, xi, xj;
+	double s, c, t, xi, xj;
 	// zero each column at a time
 	for(i=0; i < A->size2; i++)
 	{
 		for(j=i+1; j < A->size1; j++)
 		{
-			/* only perform rotation if actually needed
-			 * will increase speed if matrix is sparse */
-			if (gsl_matrix_get(A,j,i)!=0)
+			t = atan2(gsl_matrix_get(A,j,i),gsl_matrix_get(A,i,i));
+			s = sin(t);
+			c = cos(t);
+			for(k = i; k < A->size2; k++)
 			{
-				t = atan2(gsl_matrix_get(A,j,i),gsl_matrix_get(A,i,i));
-				for(k = i; k < A->size2; k++)
-				{
-					xi = gsl_matrix_get(A,i,k);
-					xj = gsl_matrix_get(A,j,k);
-					gsl_matrix_set(A,i,k,xi*cos(t)+xj*sin(t));
-					gsl_matrix_set(A,j,k,-xi*sin(t)+xj*cos(t));
-				}
-				gsl_matrix_set(A,j,i,t);
+				xi = gsl_matrix_get(A,i,k);
+				xj = gsl_matrix_get(A,j,k);
+				gsl_matrix_set(A,i,k,xi*c+xj*s);
+				gsl_matrix_set(A,j,k,-xi*s+xj*c);
 			}
+			gsl_matrix_set(A,j,i,t);
 		}
 	}
 }
@@ -40,17 +37,19 @@ void givens_qr_bak(gsl_matrix* QR, gsl_vector* b, gsl_vector* res)
 	// Assert that b and res has the correct dimensions
 	assert(res->size == QR->size2 && b->size == QR->size1);
 	int i,j;
-	double t, vi, vj;
+	double s, c, t, vi, vj;
 	// transform QRx=b -> Rx = Q^T b
 	for(i = 0; i < QR->size2; i++)
 	{
 		for(j=i+1; j<QR->size1; j++)
 		{
 			t = gsl_matrix_get(QR,j,i);
+			s = sin(t);
+			c = cos(t);
 			vi = gsl_vector_get(b,i);
 			vj = gsl_vector_get(b,j);
-			gsl_vector_set(b,i,vi*cos(t)+vj*sin(t));
-			gsl_vector_set(b,j,-vi*sin(t)+vj*cos(t));
+			gsl_vector_set(b,i,vi*c+vj*s);
+			gsl_vector_set(b,j,-vi*s+vj*c);
 		}
 	}
 	// solve Rx = Q^T b via backsubstitution and save the result in res

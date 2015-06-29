@@ -1,29 +1,41 @@
 Cyclic sweeps:
-Size 10,	rot: 202
-		time: 0.00 seconds
-Size 50,	rot: 7246
-		time: 0.03 seconds
-Size 100,	rot: 31552
-		time: 0.13 seconds
-Size 150,	rot: 76081
-		time: 0.40 seconds
+Size 50,	rot: 6892
+		time: 0.01
+Size 100,	rot: 29396
+		time: 0.10
+Size 150,	rot: 66491
+		time: 0.34
+Size 200,	rot: 120843
+		time: 0.85
+Size 250,	rot: 191693
+		time: 1.68
+Size 300,	rot: 274288
+		time: 2.94
 
 Row-wise:
-Size: 10,	rot: 3573
-		time: 0.00 seconds
-Size: 50,	rot: 238978
-		time: 0.44 seconds
-Size: 100,	rot: 4701832
-		time: 16.50 seconds
-Size: 150,	rot: 48683568
-		time: 260.30 seconds
+Size: 50,	rot: 181938
+		time 0.32
+Size: 100,	rot: 1258090
+		time 4.38
+Size: 150,	rot: 4310487
+		time 22.18
+Size: 200,	rot: 10181294
+		time 70.47
+Size: 250,	rot: 21969435
+		time 197.49
+Size: 300,	rot: 34124066
+		time 361.82
 
 Maximum element of row:
-Size 10,	rot: 3989
-		time: 0.00 seconds
-Size 50,	rot: 111944
-		time: 0.27 seconds
-Size 100,	rot: 2349780
-		time: 12.47 seconds
-Size 150,	rot: 22177978
-		time: 134.23 seconds
+Size 50,	rot: 124451
+		time 0.31
+Size 100,	rot: 788831
+		time 3.13
+Size 150,	rot: 2632812
+		time 15.75
+Size 200,	rot: 6391025
+		time 52.19
+Size 250,	rot: 13795596
+		time 143.03
+Size 300,	rot: 21342024
+		time 268.67
