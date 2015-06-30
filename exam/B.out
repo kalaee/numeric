@@ -1,0 +1,22 @@
+Tolerances
+ACC:	0.0001
+EPS:	0.0001
+
+Integrand: exp(y-x),
+x from 0 to 2*pi, y from d(x) to u(x),
+where d(x) = sin(x)-0.5 and u(x) = cos(0.5*x^2)+0.5
+Actual value (WolframAlpha):	2.55398
+Estim:	2.55391
+Estim. err:	0.000355391
+Actual err:	-6.7937e-05
+Calls to function:	298791876
+
+Integrand: sin(x+y),
+x from -pi/4 to pi/4, y from d(x) to u(x),
+where d(x) = 1/cos(x)-1 and u(x) = x/tan(x)
+Actual value (WolframAlpha):	0.55951
+Estim:	0.559413
+Estim. err:	0.000155941
+Actual err:	-9.74262e-05
+Calls to function:	9973634
+
