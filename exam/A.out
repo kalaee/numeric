@@ -5,18 +5,18 @@ EPS:	1e-06
 Integrand: exp(y-x),
 x from 0 to 2*pi, y from d(x) to u(x),
 where d(x) = sin(x)-0.5 and u(x) = cos(0.5*x^2)+0.5
-Actual value (WolframAlpha):	2.55398
+Actual value (Mathematica):	2.55398
 Estim:	2.55398
 Estim. err:	6.58925e-07
-Actual err:	-3.32928e-06
+Actual err:	5.07523e-08
 Calls to function:	844608
 
 Integrand: sin(x+y),
 x from -pi/4 to pi/4, y from d(x) to u(x),
 where d(x) = 1/cos(x)-1 and u(x) = x/tan(x)
-Actual value (WolframAlpha):	0.55951
+Actual value (Mathematica):	0.55951
 Estim:	0.55951
 Estim. err:	5.80264e-07
-Actual err:	3.33896e-07
+Actual err:	-6.83151e-11
 Calls to function:	250792
 

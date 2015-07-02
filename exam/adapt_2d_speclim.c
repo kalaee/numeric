@@ -5,7 +5,7 @@
 #define ADAPT_NRECUR_MAX 100000
 
 // perform integration over the y coordinate for a given x value
-// the routine uses adaptive quadratures with open intervals
+// the routine uses adaptive quadratures with open intervals of order 24
 double adapt24_inner_speclim(double f(double x, double y), double x, double a, double b, double y2, double y3, double acc, double eps, double *err, int nrecur)
 {
 	if (a == b)
@@ -48,7 +48,9 @@ double adapt24_inner_speclim(double f(double x, double y), double x, double a, d
 	}
 }
 
-// perform integration over x, where for each y1 and y4, integration over y-coordinate is performed via adapt24_inner
+// perform integration over x, where for each y1 and y4,
+// integration over y-coordinate is performed via adapt24_inner
+// the routine uses adaptive quadratures with open intervals of order 24
 double adapt24_outer_speclim(double f(double x, double y), double ax, double bx, double d(double x), double u(double x), double y2, double y3, double acc, double eps, double *err, int nrecur)
 {
 	// check iteration level is not too deep
@@ -63,18 +65,19 @@ double adapt24_outer_speclim(double f(double x, double y), double ax, double bx,
 	double dummy;	// dummy for error-pointer to adapt24_inner below
 	double hx = bx-ax;	// width of interval in x coordinate
 	double acc_inner = acc/2.;	// reduce absolute tolerance by sqrt(4) when passing to adapt24_inner
-	double x1 = ax+hx/6.;	// coordinate to evaluate y?_x1_inner below
-	double x4 = ax+hx*5./6.;	// coordinate to evaluate y?_x4_inner below
-	double ay_x1 = d(x1);
+	double x1 = ax+hx/6.;	// coordinate to evaluate y(2/3)_x1_inner below
+	double x4 = ax+hx*5./6.;	// coordinate to evaluate y(2/3)_x4_inner below
+	double ay_x1 = d(x1);	// upper and lower limits to y at given x
 	double ay_x4 = d(x4);
 	double by_x1 = u(x1);
 	double by_x4 = u(x4);
-	double hy_x1 = by_x1 - ay_x1;
+	double hy_x1 = by_x1 - ay_x1;	// width of y at given x
 	double hy_x4 = by_x4 - ay_x4;
-	double y2_x1_inner = f(x1,ay_x1+hy_x1*2./6.);
+	double y2_x1_inner = f(x1,ay_x1+hy_x1*2./6.);	// integrand values of y at given x for 24 quadrature in y
 	double y3_x1_inner = f(x1,ay_x1+hy_x1*4./6.);
 	double y2_x4_inner = f(x4,ay_x4+hy_x4*2./6.);
 	double y3_x4_inner = f(x4,ay_x4+hy_x4*4./6.);
+	// integral values over y at given x for 24 quadrature in x
 	double y1 = adapt24_inner_speclim(f,x1,ay_x1,by_x1,y2_x1_inner,y3_x1_inner,acc_inner,eps,&dummy,0);
 	double y4 = adapt24_inner_speclim(f,x4,ay_x4,by_x4,y2_x4_inner,y3_x4_inner,acc_inner,eps,&dummy,0);
 	double Q = hx/6.*(2.*y1+y2+y3+2*y4); // integral estimate to fourth order
@@ -97,6 +100,13 @@ double adapt24_outer_speclim(double f(double x, double y), double ax, double bx,
 		return Q1 + Q2;
 	}
 }
+
+
+// adaptive quadrature integrator for 2D iterated integrals where limits 
+// of y are a function of x. ax and bx are limits on x,
+// provides the lower and upper limits of y
+// acc and eps are allowed absolute and relative error
+// error is stored in thorugh the pointer err
 double adapt_2d_speclim(double f(double x, double y), double ax, double bx, double d(double x), double u (double x), double acc, double eps, double* err)
 {
 	if (ax == bx)
@@ -108,16 +118,16 @@ double adapt_2d_speclim(double f(double x, double y), double ax, double bx, doub
 	{
 		// prepare neccesary arguments for first iteration of integration
 		double dummy;
-		double hx = bx-ax;
-		double acc_inner = acc/2.;
-		double x2 = ax+hx*2./.6;
+		double hx = bx-ax;	// width in x
+		double acc_inner = acc/2.;	// allowed absolute error for integration over y at given x
+		double x2 = ax+hx*2./.6;	// the points whose integrand values need to be supplied adapt24_outer_speclim
 		double x3 = ax+hx*4./6.;
 		double ay_x2 = d(x2);
 		double ay_x3 = d(x3);
 		double by_x2 = u(x2);
 		double by_x3 = u(x3);
-		double hy_x2 = by_x2 - ay_x2;
-		double hy_x3 = by_x3 - ay_x3;
+		double hy_x2 = by_x2 - ay_x2;	// width at x2
+		double hy_x3 = by_x3 - ay_x3;	// width at x3
 		double y2_x2_inner = f(x2,ay_x2+hy_x2*2./6.);
 		double y3_x2_inner = f(x2,ay_x2+hy_x2*4./6.);
 		double y2_x3_inner = f(x3,ay_x3+hy_x3*2./6.);

@@ -2,21 +2,61 @@ Tolerances
 ACC:	0.0001
 EPS:	0.0001
 
+============================================================
 Integrand: exp(y-x),
 x from 0 to 2*pi, y from d(x) to u(x),
 where d(x) = sin(x)-0.5 and u(x) = cos(0.5*x^2)+0.5
-Actual value (WolframAlpha):	2.55398
+============================================================
+Actual value (Mathematica):	2.55398
+
+Adaptive n-dim iterated integral routine:
+Estim:	2.55398
+Estim. err:	9.05069e-05
+Actual err:	-3.61167e-07
+Calls to function:	13664
+------------------------------------------------------------
+Monte Carlo n-dim iterated integral:
 Estim:	2.55391
 Estim. err:	0.000355391
 Actual err:	-6.7937e-05
 Calls to function:	298791876
 
-Integrand: sin(x+y),
-x from -pi/4 to pi/4, y from d(x) to u(x),
-where d(x) = 1/cos(x)-1 and u(x) = x/tan(x)
-Actual value (WolframAlpha):	0.55951
-Estim:	0.559413
-Estim. err:	0.000155941
-Actual err:	-9.74262e-05
-Calls to function:	9973634
+============================================================
+Integrand: cos(x)+sin(y+z)+q,
+x: d = 0, u = 3
+y: d(x) = -x, u(x) = x
+z: d(x,y) = 4, u(x,y) = y+1
+q: d(x,y,z) = -z, u(x,y,z) = y+x
+============================================================
+Actual value (Mathematica):	74.3255
+Adaptive n-dim iterated integral routine:
+Estim:	74.3256
+Estim. err:	0.00132943
+Actual err:	5.25058e-05
+Calls to function:	71834320
+------------------------------------------------------------
+Monte Carlo n-dim iterated integral:
+Estim:	74.3143
+Estim. err:	0.00753143
+Actual err:	-0.0112115
+Calls to function:	1009172035
+
+============================================================
+Integrand: sin(x+y+z)
+x: d = 0,	u = 1
+y: d(x) = x,	u(x) = 2*x^2
+z: d(x,y) = y+x,	u(x,y) = y - x
+============================================================
+Actual value (Mathematica):	0.0336666
+Adaptive n-dim iterated integral routine:
+Estim:	0.033668
+Estim. err:	9.00246e-05
+Actual err:	1.37502e-06
+Calls to function:	279888
+------------------------------------------------------------
+Monte Carlo n-dim iterated integral:
+Estim:	0.0337461
+Estim. err:	0.000103375
+Actual err:	7.94845e-05
+Calls to function:	15662009
 

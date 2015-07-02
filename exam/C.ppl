@@ -1,0 +1,18 @@
+set terminal pdf
+set output 'C_calls.pdf'
+set title 'Functions Calls neccesary for integration over n-dim ball'
+set xlabel 'Dimensions'
+set ylabel 'Function Calls'
+set logscale y
+set key top left
+plot 'C.out' using 1:4 w p title 'Adaptive Quadrature', \
+'C.out' using 1:6 w p title 'Monte Carlo'
+
+set output 'C_error.pdf'
+set title 'Relative error for integration over volume of n-dim ball'
+set ylabel 'Relative Error'
+set key bottom left
+set nologscale y
+
+plot 'C.out' using $1:($3/$2-1) w p title 'Adaptive Quadrature', \
+'C.out' using $1:($5/$2-1) w p title 'Monte Carlo'
