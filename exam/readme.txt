@@ -33,6 +33,8 @@ Task C: Volume of an n-ball
 1. Use your routines from B to estimate the volume of a ball in n-dimensions,
 where n = 1, ..., 6, and compare both the error of the estimates and number
 of function calls each routine needs
+2. Further: integrate the function exp(\sum_i x_i) in the n-dimensional ball
+and compare the number of function calls
 
 
 My solution
@@ -94,6 +96,12 @@ The number of function calls are shown in C_calls.pdf
 and the relative error of the estimates are shown in C_error.pdf
 Note that the neccesary number of function calls increases
 much faster for adaptive quadratures compared to Monte Carlo
-integration. Yet, this might simply be due to the uniformity
-of the integrand, f(x) = 1, and change if the integrand is
-a function of x.
+integration. This pattern is the same whether we consider the
+integration over the constant function or over the exponential
+function.
+Lastly we note that the number of samples neccesary in Monte
+Carlo integration of the exponential function begins considerably
+higher than that of the constant function, yet remains of the same
+order of magnitude in dimensions 1 through 6, differently from
+the behaviour of the other integrations which increase at
+a higher rate.
