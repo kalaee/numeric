@@ -17,19 +17,19 @@ monte_carlo_speclim.o: monte_carlo_speclim.c monte_carlo_speclim.h
 # Task A
 A: A.out
 A.out: mainA
-	./mainA | tee $@
+	./mainA > $@
 mainA: mainA.c adapt_2d_speclim.o
 
 # Task B
 B: B.out
 B.out: mainB
-	./mainB | tee $@
+	./mainB > $@
 mainB: mainB.c monte_carlo_speclim.o adapt_nd_speclim.o
 
 # Task C
 C: C.out C_error.pdf C_calls.pdf
 C.out: mainC
-	./mainC | tee $@
+	./mainC > $@
 mainC: mainC.c monte_carlo_speclim.o adapt_nd_speclim.o
 C_error.pdf: C.out C.ppl
 	pyxplot C.ppl
